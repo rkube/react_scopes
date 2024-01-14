@@ -40,3 +40,15 @@
 .read-the-docs {
   color: #888;
 }
+
+
+.container {
+  width: fit-content
+}
+
+.row {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+}
+

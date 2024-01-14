@@ -3,6 +3,11 @@
 Shows how to connect a list and search component.
 The list is filtered by whatever is typed in the search bar.
 
+Installed:
+* Chakra
+* ChartJS: `npm install --save chart.js react-chartjs-2`
+
+
 
 # Original readme:
 

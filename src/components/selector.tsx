@@ -18,7 +18,6 @@ const Selector = (props) => {
   // https://stackoverflow.com/questions/56247433/how-to-use-setstate-callback-on-react-hooks
   // https://react.dev/reference/react/Component#setstate
   //
-
   // useEffect(() =>{
   //   console.log("=============== UseEffect! ==================")
   //   console.log("shot = ", shot)
@@ -58,11 +57,10 @@ const Selector = (props) => {
   }
 
   const add_signal = (e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>) => {
-    console.log(e)
-    console.log("this_type = ", selectedType)
-    console.log("shot = ", shot)
+    // console.log(e)
+    // console.log("this_type = ", selectedType)
+    // console.log("shot = ", shot)
     props.onClick(selectedType, shot)
-
   }
 
 

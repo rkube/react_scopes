@@ -4,6 +4,8 @@ type items_t = {
     index: number,
     shot: number,
     type: type_e,
+    signal: number[],
+    timebase: number[]
 }
 
 
@@ -26,6 +28,5 @@ const type_string_repr: enum_dict<type_e, string> = {
 const to_str = (it: items_t) => {
     return(it.shot.toString() + " " + type_string_repr[it.type])
 }
-
 
 export {type_e, type items_t, type_string_repr, to_str}
