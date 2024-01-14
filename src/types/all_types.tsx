@@ -3,7 +3,6 @@
 type items_t = {
     index: number,
     shot: number,
-    title: string,
     type: type_e,
 }
 
@@ -18,9 +17,9 @@ enum type_e {Type1, Type2, Type3}
 
 // String representation of the Types in the enum dict
 const type_string_repr: enum_dict<type_e, string> = {
-    [type_e.Type1]: "Type 1!!",
-    [type_e.Type2]: "Type 2!!",
-    [type_e.Type3]: "Type 3!!",
+    [type_e.Type1]: "Type_1",
+    [type_e.Type2]: "Type_2",
+    [type_e.Type3]: "Type_3",
 }
 
 // String representation of an items_t
