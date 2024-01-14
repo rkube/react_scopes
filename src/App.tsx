@@ -1,8 +1,8 @@
 //
-// import { useState } from 'react'
+import { useState } from 'react'
 import './App.css'
 
-import { type_e, items_t, type_string_repr } from './types/all_types'
+import { type_e, items_t, to_str } from './types/all_types'
 import MyList from './components/list'
 import Selector from './components/selector'
 import { ChakraProvider } from '@chakra-ui/react'
@@ -10,7 +10,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 
 function App() {
 
-  const list_data:items_t[] = [
+  const init_state:items_t[] = [
     {
       index: 1,
       shot: 100,
@@ -31,16 +31,14 @@ function App() {
     }
   ]
 
-  // console.log(type_string_repr[type_e.Type1])
-
+const [list_data, set_list_data] = useState<items_t[]>(init_state)
 
   return (
     <>
       <h1>Hello, World!</h1>
       <ChakraProvider>
       <Selector />
-      {/* <MyList items_list={list_data} render={(item: items_t): string => { return item.title} }/> */}
-      <MyList items_list={list_data} render={(item: items_t): string => { return type_string_repr[item.type]} }/>
+      <MyList items_list={list_data} render={(item: items_t): string => { return to_str(item)} }/>
       </ChakraProvider>
     </>
   )
