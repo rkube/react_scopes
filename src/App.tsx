@@ -1,45 +1,47 @@
-import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
+//
+// import { useState } from 'react'
 import './App.css'
 
-import items_t from './types/all_types'
-// import test_me from './components/list'
+import { type_e, items_t, type_string_repr } from './types/all_types'
 import MyList from './components/list'
-
-
+import Selector from './components/selector'
+import { ChakraProvider } from '@chakra-ui/react'
 
 
 function App() {
-  const [count, setCount] = useState(0)
 
   const list_data:items_t[] = [
     {
       index: 1,
-      title: "item 1"
+      shot: 100,
+      title: "item 1",
+      type: type_e.Type1,
     },
     {
       index: 2,
-      title: "item 2"
+      shot: 101,
+      title: "item 2",
+      type: type_e.Type2,
     },
     {
       index: 3,
-      title: "item 3"
+      shot:102,
+      title: "item 3",
+      type: type_e.Type1
     }
   ]
 
+  // console.log(type_string_repr[type_e.Type1])
 
-  // test_me(list_data)
-
-  // console.log("Test mapping in App:")
-  // console.log(list_data)
-  // list_data.map((item:list_props_t): list_props_t => {{item.index+1, item.title}})
-  // console.log(foo)
 
   return (
     <>
       <h1>Hello, World!</h1>
-      <MyList items_list={list_data} />
+      <ChakraProvider>
+      <Selector />
+      {/* <MyList items_list={list_data} render={(item: items_t): string => { return item.title} }/> */}
+      <MyList items_list={list_data} render={(item: items_t): string => { return type_string_repr[item.type]} }/>
+      </ChakraProvider>
     </>
   )
 }
