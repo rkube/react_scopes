@@ -50,7 +50,10 @@ const Selector = (props) => {
 
   // Callback for the add data button
   const add_signal = (e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>) => {
-    props.onClick(selectedType, shot)
+    // Check if shot is undefined.
+    if (shot !== undefined) {
+      props.onClick(selectedType, shot)
+    }
   }
 
 

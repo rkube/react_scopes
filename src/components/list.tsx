@@ -12,8 +12,7 @@ interface signal_list_i {
 }
 
 // Renders items_list
-const MyList = ({ signal_list, render, cb}: signal_list_i) => {   
-
+const MyList = ({ signal_list, render, cb }: signal_list_i) => {   
     return (
         <SimpleGrid gap={12} px={12} columns={2}>
 

@@ -6,7 +6,7 @@
 
 import { useRef } from 'react';
 import { items_t, to_str, type_e } from '../types/all_types'
-import { Chart, CategoryScale,  registerables } from 'chart.js';
+import { Chart, CategoryScale, Plugin, registerables } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
 Chart.register(...registerables);
@@ -27,6 +27,24 @@ const pick_color = (sig_type:type_e): string => {
     }
 }
 
+// declare module 'chart.js' {
+//     interface PluginOptionsByType<TType extends ChartType> {
+//       customCanvasBackgroundColor?: {
+//         color?: string
+//       }
+//     }
+//   }
+   
+
+// cross-hair plugin
+// const cross_hair_plugin = {
+//     id: 'cross_hair_plugin',
+//     afterDatasetsDraw(chart, args, plugins) {
+//         console.log("Chart.js plugin")
+//     }
+// }
+
+
 
 const MyPlot = ({signals}: { signals: items_t[] }) => {
     // Reference to the plot in this component
@@ -40,6 +58,14 @@ const MyPlot = ({signals}: { signals: items_t[] }) => {
         borderColor: pick_color(sig.type)
     }})
 
+
+    // my plugin
+    const cross_hair_plugin = {
+        id: "cross_hair_plugin",
+        beforeDraw(chart, args, plugins) {
+            console.log("my plugin!")
+        }
+    }
 
 
     const options = {
@@ -60,8 +86,8 @@ const MyPlot = ({signals}: { signals: items_t[] }) => {
                 title: 'x',
                 display: true
             }
-          }
-        },
+          },
+        }
       };
       
     const labels = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0];
@@ -136,7 +162,7 @@ const MyPlot = ({signals}: { signals: items_t[] }) => {
     
 
     return(
-        <Line ref={chartRef} data={data} options={options} onClick={lineplot_callback}/>
+        <Line ref={chartRef} data={data} options={options} plugins={[cross_hair_plugin]} onClick={lineplot_callback}/>
     )
 }
 
