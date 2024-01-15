@@ -3,7 +3,7 @@ import { useRef, useState } from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
 // import { Chart } from 'chart.js'
 // import { getRelativePosition } from 'chart.js/helpers'
-import { getElementAtEvent } from 'react-chartjs-2'
+// import { getElementAtEvent } from 'react-chartjs-2'
 import './App.css'
 
 import { type_e, items_t, to_str } from './types/all_types'
@@ -55,23 +55,15 @@ function App() {
   }
 
 
-
-
   return (
   <div>
     <ChakraProvider>
       <h1>Hello, World!</h1>
-        {/* <div className="row"> */}
           <Selector onClick={handleNewSignal} />
           <MyList signal_list={signalList} 
             render={(item: items_t): string => { return to_str(item) } } 
             cb={remove_signal_cb} />
-        {/* </div> */}
-        {/* <div className="row"> */}
-        {/* </div> */}
-        {/* <div className="row"> */}
           <MyPlot signals={signalList} />
-        {/* </div> */}
       </ChakraProvider>
       </div>
   )

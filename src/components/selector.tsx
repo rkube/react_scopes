@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, MouseEvent, KeyboardEvent } from 'react'
 import { Button, NumberInput, NumberInputField, Select, Stack } from '@chakra-ui/react'
+import { AddIcon } from '@chakra-ui/icons'
 
 import { type_e } from '../types/all_types'
 
@@ -17,7 +18,6 @@ const Selector = (props) => {
   // they are updated:
   // https://stackoverflow.com/questions/56247433/how-to-use-setstate-callback-on-react-hooks
   // https://react.dev/reference/react/Component#setstate
-  //
   // useEffect(() =>{
   //   console.log("=============== UseEffect! ==================")
   //   console.log("shot = ", shot)
@@ -31,35 +31,25 @@ const Selector = (props) => {
     console.log(e.currentTarget.value);
     switch(e.currentTarget.value) {
       case "Type 1":
-        // console.log("Ok: selected_ix: ", e.currentTarget.value)
         setSelectedType(type_e.Type1)
         setTs("Type1")
-        // console.log("this_type = ", selectedType, ", ts=", ts)
         break
       case "Type 2":
-        // console.log("Ok: selected_ix: ", e.currentTarget.value)
         setSelectedType(type_e.Type2)
         setTs("Type2")
-        // console.log("this_type = ", selectedType, ", ts =", ts)
-
         break
       case "Type 3":
-        // console.log("Ok: selected_ix: ", e.currentTarget.value)
         setSelectedType(type_e.Type3)
         setTs("Type3")
-        // console.log("this_type = ", selectedType, ", ts=", ts)
         break
       default:
         console.log("This should not happen: selected_ix: ", e.currentTarget.value)
-        // console.log(e.currentTarget.value)
         break;
     }
   }
 
+  // Callback for the add data button
   const add_signal = (e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>) => {
-    // console.log(e)
-    // console.log("this_type = ", selectedType)
-    // console.log("shot = ", shot)
     props.onClick(selectedType, shot)
   }
 
@@ -75,7 +65,7 @@ const Selector = (props) => {
         <NumberInput>
           <NumberInputField  onChange={(e) => {setShot(Number(e.target.value))}}/>
         </NumberInput>
-        <Button onClick={(e) => {add_signal(e)}}>Add data</Button>
+        <Button onClick={(e) => {add_signal(e)}}><AddIcon /></Button>
       </Stack>
     </div>
   )
