@@ -58,7 +58,6 @@ function App() {
   return (
   <div>
     <ChakraProvider>
-      <h1>Hello, World!</h1>
           <Selector onClick={handleNewSignal} />
           <MyList signal_list={signalList} 
             render={(item: items_t): string => { return to_str(item) } } 

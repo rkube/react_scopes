@@ -52,9 +52,15 @@ const MyPlot = ({signals}: { signals: items_t[] }) => {
             position: 'top' as const,
           },
           title: {
-            display: true,
-            text: 'Chart.js Line Chart',
+            display: false,
+            text: '',
           },
+          scales: {
+            x: {
+                title: 'x',
+                display: true
+            }
+          }
         },
       };
       
