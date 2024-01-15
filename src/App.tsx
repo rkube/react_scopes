@@ -1,6 +1,9 @@
 //
-import { useEffect, useState } from 'react'
+import { useRef, useState } from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
+// import { Chart } from 'chart.js'
+// import { getRelativePosition } from 'chart.js/helpers'
+import { getElementAtEvent } from 'react-chartjs-2'
 import './App.css'
 
 import { type_e, items_t, to_str } from './types/all_types'
@@ -14,7 +17,7 @@ function App() {
 
   const init_state:items_t[] = [
     {
-      index: 1,
+      index: 0,
       shot: 100,
       type: type_e.Type1,
       timebase: [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0],
@@ -23,23 +26,36 @@ function App() {
 
   ]
 
-  const [ListData, setListData] = useState<items_t[]>(init_state)
+  const [signalList, setSignalList] = useState<items_t[]>(init_state)
 
   // This is a callback to selector. The function passes 
   // the currently selected type and shot number up.
   // From here, we construct a items_t and update the list.
   // See updating arrays in setState: https://react.dev/learn/updating-arrays-in-state
   const handleNewSignal = (new_type: type_e, new_shot: number) => {
-    // console.log("handleNewSignal callback: shot = ", new_shot, ", new_type = ", new_type)
-    // console.log("handleNewSignal: ListData = ", ListData)
     const timebase:number[] = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
-    const signal:number[] = timebase.map((i) => i + Math.random() * 0.1)
+    const signal:number[] = timebase.map((i) => i + Math.random() * 0.5)
 
-    const new_item = {shot: new_shot, type: new_type, index: ListData.length + 1, 
+    // Assign an index larger than the largest index in the array
+    const new_ix = Math.max(...signalList.map(item => item.index)) + 1
+
+    const new_item = {shot: new_shot, type: new_type, index: new_ix, 
       timebase: timebase, signal: signal}
     // Update state
-    setListData([...ListData, new_item])
+    setSignalList([...signalList, new_item])
   }
+
+  // Callback to remove signals from the list
+  // Arguments:
+  // ix (number) - The index of the signal that needs to be removed
+  const remove_signal_cb = (ix: number) => {
+    console.log("remove_signal_cb here, ix=", ix)
+    const new_signal_list = signalList.filter((item) => item.index != ix)
+    setSignalList(new_signal_list)
+  }
+
+
+
 
   return (
   <div>
@@ -47,12 +63,14 @@ function App() {
       <h1>Hello, World!</h1>
         {/* <div className="row"> */}
           <Selector onClick={handleNewSignal} />
-          <MyList items_list={ListData} render={(item: items_t): string => { return to_str(item)} }/>
+          <MyList signal_list={signalList} 
+            render={(item: items_t): string => { return to_str(item) } } 
+            cb={remove_signal_cb} />
         {/* </div> */}
         {/* <div className="row"> */}
         {/* </div> */}
         {/* <div className="row"> */}
-          <MyPlot signals={ListData}/>
+          <MyPlot signals={signalList} />
         {/* </div> */}
       </ChakraProvider>
       </div>
