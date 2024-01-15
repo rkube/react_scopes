@@ -7,8 +7,7 @@
 import { useRef } from 'react';
 import { items_t, to_str, type_e } from '../types/all_types'
 import { Chart, CategoryScale,  registerables } from 'chart.js';
-import { Line, getElementAtEvent } from 'react-chartjs-2';
-import { getRelativePosition } from 'chart.js/helpers';
+import { Line } from 'react-chartjs-2';
 
 Chart.register(...registerables);
 
