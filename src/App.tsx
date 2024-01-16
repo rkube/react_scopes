@@ -1,6 +1,6 @@
 //
 import { useRef, useState } from 'react'
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
 // import { Chart } from 'chart.js'
 // import { getRelativePosition } from 'chart.js/helpers'
 // import { getElementAtEvent } from 'react-chartjs-2'
@@ -55,16 +55,44 @@ function App() {
   }
 
 
+  // Callback that receives input from chart plugins
+  const [chartVal, setChartVal] = useState<number>(0)
+  const chart_cb = (new_chart_val: number) => {
+    console.log("This is chart_cb: received from chart plugin: ", new_chart_val)
+    setChartVal(new_chart_val)
+  }
+
   return (
-  <div>
+  <>
     <ChakraProvider>
-          <Selector onClick={handleNewSignal} />
-          <MyList signal_list={signalList} 
+    <Grid
+      templateRows={'400px 1fr'}
+      templateColumns={'1fr 1fr 1fr'}
+      h='800px'
+      gap='4'
+      // color='blackAlpha.700'
+      fontWeight='bold'
+    >
+
+  <GridItem pl='2' bg='gray.300'>
+    <Selector onClick={handleNewSignal} />
+    <MyList signal_list={signalList} 
             render={(item: items_t): string => { return to_str(item) } } 
             cb={remove_signal_cb} />
-          <MyPlot signals={signalList} />
+  </GridItem>
+  <GridItem pl='2' bg='blue.100'>
+    <MyPlot signals={signalList} xtalk_cb={chart_cb} />
+  </GridItem>
+
+  <GridItem pl='2' bg='green.100' >
+    <MyPlot signals={signalList} xtalk_cb={chart_cb} />
+  </GridItem>
+
+</Grid>
+
+
       </ChakraProvider>
-      </div>
+      </>
   )
 }
 

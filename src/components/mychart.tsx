@@ -6,8 +6,9 @@
 
 import { useRef } from 'react';
 import { items_t, to_str, type_e } from '../types/all_types'
-import { Chart, CategoryScale, Plugin, registerables } from 'chart.js';
+import { Chart, ChartType, CategoryScale, Plugin, registerables, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { Easing } from 'framer-motion';
 
 Chart.register(...registerables);
 
@@ -26,27 +27,20 @@ const pick_color = (sig_type:type_e): string => {
             return 'rgb(255, 255, 153)'
     }
 }
-
-// declare module 'chart.js' {
-//     interface PluginOptionsByType<TType extends ChartType> {
-//       customCanvasBackgroundColor?: {
-//         color?: string
-//       }
-//     }
-//   }
    
 
-// cross-hair plugin
-// const cross_hair_plugin = {
-//     id: 'cross_hair_plugin',
-//     afterDatasetsDraw(chart, args, plugins) {
-//         console.log("Chart.js plugin")
-//     }
-// }
 
+// This is an interface for the hover plugin
+declare module 'chart.js' {
+    interface PluginOptionsByType<TType extends ChartType> {
+      extract_hover_coords?: {
+        lineColor: string
+        arg1: string
+      };
+    }
+}
 
-
-const MyPlot = ({signals}: { signals: items_t[] }) => {
+const MyPlot = ({signals, xtalk_cb}: { signals: items_t[], xtalk_cb:any }) => {
     // Reference to the plot in this component
     const chartRef = useRef()
 
@@ -59,36 +53,85 @@ const MyPlot = ({signals}: { signals: items_t[] }) => {
     }})
 
 
-    // my plugin
-    const cross_hair_plugin = {
-        id: "cross_hair_plugin",
-        beforeDraw(chart, args, plugins) {
-            console.log("my plugin!")
+
+    // A simple chart.js plugin.
+    // Relevant tutorials: https://www.youtube.com/watch?v=X0nXI9sPMgA
+    const extract_hover_coords: Plugin = {
+        id: "extract_hover_coords",
+
+        // afterDraw: (chart: Chart, args: any, plugins: Plugin) => {
+        //     console.log("extract_hover_coords, afterDraw")
+        // },
+
+        events: ['mousemove'],
+
+        afterDraw: (chart: Chart, args: any, options?: any) => {
+            console.log("extract_hover_coords, beforeDraw")
+            // const { ctx, 
+            //         data,
+            //         chartArea: {top, bottom, left, right, width, height}, 
+            //         scales: {x, y} } = chart;
+            // console.log("ctx = ", ctx);
+            // console.log("args = ", args.inChartArea)
+            // ctx.save()
+
+            // console.log("I got ", data.datasets.length, " datasets...")
+            // if (data.datasets.length > 0) {
+
+            // }
+
+            // const lastPoint = data.datasets[0].data.length - 1
+            // console.log("lastPoint = ", lastPoint)
+            // const y_last = data.datasets[0].data[lastPoint]
+            // console.log("y_last = ", y_last)
+
+            // console.log(y_last)
+
+            // ctx.beginPath()
+            // ctx.lineWidth = 2
+            // ctx.strokeStyle = 'gray'
+            // ctx.setLineDash([6, 6])
+            // ctx.moveTo(left, y.getPixelForValue(y_last))
+            // ctx.lineTo(right, y.getPixelForValue(y_last))
+            // ctx.stroke()
+
+            // xtalk_cb(y_last)
         }
     }
 
-
-    const options = {
+    // We need to tell TS that we have options for a line plot
+    // https://react-chartjs-2.js.org/faq/typescript/
+    const options: ChartOptions<"line"> = {
         responsive: true,
-        inteaction: {
+        interaction: {
             mode: 'nearest'
         },
         plugins: {
-          legend: {
-            position: 'top' as const,
-          },
-          title: {
-            display: false,
-            text: '',
-          },
-          scales: {
-            x: {
-                title: 'x',
-                display: true
+            title: {
+                display: true,
+                text: ' this is the title '
+            },
+            extract_hover_coords: {
+                lineColor: 'blue'
             }
-          },
+        },
+        scales: {
+            x: {
+                // display: true,
+                title: {
+                    display: true,
+                    text: 'x-axis label'
+                }
+            },
+            y: {
+                // display: true,
+                title: {
+                    display: true,
+                    text: 'y-axis label'
+                }
+            }
         }
-      };
+    }
       
     const labels = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0];
 
@@ -149,20 +192,12 @@ const MyPlot = ({signals}: { signals: items_t[] }) => {
     const data = {
         labels,
         datasets: signal_datasets
-        // datasets: signals.map((sig) => {label: to_str(sig), data: sig.signal})
-        // datasets: [
-        //   {
-        //     label: 'Dataset 1',
-        //     data: [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0],
-        //     // borderColor: 'rgb(255, 99, 132)',
-        //     // backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        //   }
-        // ],
       };
     
-
     return(
-        <Line ref={chartRef} data={data} options={options} plugins={[cross_hair_plugin]} onClick={lineplot_callback}/>
+        // If we want to pass plugins we can also do this like:
+        // <Line ref={chartRef} data={data} options={options} plugins={[extract_hover_coords]} onClick={lineplot_callback}/>
+        <Line ref={chartRef} data={data} options={options} plugins={[extract_hover_coords]}  onClick={lineplot_callback}/>
     )
 }
 
