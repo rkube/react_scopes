@@ -58,46 +58,71 @@ const MyPlot = ({signals, xtalk_cb}: { signals: items_t[], xtalk_cb:any }) => {
     // Relevant tutorials: https://www.youtube.com/watch?v=X0nXI9sPMgA
     const extract_hover_coords: Plugin = {
         id: "extract_hover_coords",
-
-        // afterDraw: (chart: Chart, args: any, plugins: Plugin) => {
-        //     console.log("extract_hover_coords, afterDraw")
-        // },
-
         events: ['mousemove'],
 
-        afterDraw: (chart: Chart, args: any, options?: any) => {
-            console.log("extract_hover_coords, beforeDraw")
-            // const { ctx, 
-            //         data,
-            //         chartArea: {top, bottom, left, right, width, height}, 
-            //         scales: {x, y} } = chart;
-            // console.log("ctx = ", ctx);
-            // console.log("args = ", args.inChartArea)
-            // ctx.save()
+        // Track the movement
+        afterEvent: (chart: Chart, args: any) => {
+            console.log("======== extract_hover_coords - afterEvent =======")
+            console.log("args = ", args)
 
-            // console.log("I got ", data.datasets.length, " datasets...")
-            // if (data.datasets.length > 0) {
+            // Argument destructuring for chart:
+            const { canvas } = chart
 
-            // }
+            // this function picks up the nearest value in our plot
+            function nearest_value(chart: Chart, mousemove: MouseEvent){
+                // Try and find some data points
+                const points = chart.getElementsAtEventForMode(mousemove, 'nearest', 
+                    {intersect: false}, true)
+                // points.length will be > 0 (that is, set) when a dataset point is
+                // near the cursor position.
+                if (points.length){
+                    console.log("    points[0].index = ", points[0].index)
+                    xtalk_cb(points[0].index)
+                }
+            }
+            // If the event is inside the chart areat, add an eventListener which 
+            // extracts the closest data point to the cursor position.
+            if(args.inChartArea) {
+                console.log("Inside chart area")
+                canvas.addEventListener('mousemove', (e) => nearest_value(chart, e))
 
-            // const lastPoint = data.datasets[0].data.length - 1
-            // console.log("lastPoint = ", lastPoint)
-            // const y_last = data.datasets[0].data[lastPoint]
-            // console.log("y_last = ", y_last)
-
-            // console.log(y_last)
-
-            // ctx.beginPath()
-            // ctx.lineWidth = 2
-            // ctx.strokeStyle = 'gray'
-            // ctx.setLineDash([6, 6])
-            // ctx.moveTo(left, y.getPixelForValue(y_last))
-            // ctx.lineTo(right, y.getPixelForValue(y_last))
-            // ctx.stroke()
-
-            // xtalk_cb(y_last)
+            }
+            console.log("======== extract_hover_coords - afterEvent =======")
         }
     }
+
+        // afterDraw: (chart: Chart, args: any, options?: any) => {
+        //     console.log("extract_hover_coords, beforeDraw")
+        //     // const { ctx, 
+        //     //         data,
+        //     //         chartArea: {top, bottom, left, right, width, height}, 
+        //     //         scales: {x, y} } = chart;
+        //     // console.log("ctx = ", ctx);
+        //     // console.log("args = ", args.inChartArea)
+        //     // ctx.save()
+
+        //     // console.log("I got ", data.datasets.length, " datasets...")
+        //     // if (data.datasets.length > 0) {
+
+        //     // }
+
+        //     // const lastPoint = data.datasets[0].data.length - 1
+        //     // console.log("lastPoint = ", lastPoint)
+        //     // const y_last = data.datasets[0].data[lastPoint]
+        //     // console.log("y_last = ", y_last)
+
+        //     // console.log(y_last)
+
+        //     // ctx.beginPath()
+        //     // ctx.lineWidth = 2
+        //     // ctx.strokeStyle = 'gray'
+        //     // ctx.setLineDash([6, 6])
+        //     // ctx.moveTo(left, y.getPixelForValue(y_last))
+        //     // ctx.lineTo(right, y.getPixelForValue(y_last))
+        //     // ctx.stroke()
+
+        //     // xtalk_cb(y_last)
+        // }
 
     // We need to tell TS that we have options for a line plot
     // https://react-chartjs-2.js.org/faq/typescript/
@@ -197,7 +222,7 @@ const MyPlot = ({signals, xtalk_cb}: { signals: items_t[], xtalk_cb:any }) => {
     return(
         // If we want to pass plugins we can also do this like:
         // <Line ref={chartRef} data={data} options={options} plugins={[extract_hover_coords]} onClick={lineplot_callback}/>
-        <Line ref={chartRef} data={data} options={options} plugins={[extract_hover_coords]}  onClick={lineplot_callback}/>
+        <Line ref={chartRef} data={data} options={options} plugins={[extract_hover_coords]} onClick={lineplot_callback}/>
     )
 }
 
