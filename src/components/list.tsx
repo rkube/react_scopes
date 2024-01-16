@@ -1,13 +1,13 @@
 
 import { Button, SimpleGrid, List, ListItem, Stack, Text } from '@chakra-ui/react'
 import{ DeleteIcon } from '@chakra-ui/icons'
-import { items_t } from '../types/all_types'
+import { signal_t } from '../types/all_types'
 
 
 // The interface describes what to expect as a parameter
 interface signal_list_i {
-    signal_list: items_t[] 
-    render: (i: items_t) => string
+    signal_list: signal_t[] 
+    render: (i: signal_t) => string
     cb: (ix: number) => void
 }
 

@@ -6,7 +6,7 @@ import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
 // import { getElementAtEvent } from 'react-chartjs-2'
 import './App.css'
 
-import { type_e, items_t, to_str } from './types/all_types'
+import { type_e, signal_t, to_str, cross_hair_t } from './types/all_types'
 import MyList from './components/list'
 import Selector from './components/selector'
 import MyPlot from './components/mychart'
@@ -15,32 +15,33 @@ import MyPlot from './components/mychart'
 
 function App() {
 
-  const init_state:items_t[] = [
+  const init_state:signal_t[] = [
     {
       index: 0,
       shot: 100,
       type: type_e.Type1,
       timebase: [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0],
-      signal: [0.0, 0.48, 0.84, 1.0, 0.91, 0.60, 0.14]
+      samples: [0.0, 0.48, 0.84, 1.0, 0.91, 0.60, 0.14]
     },
-
   ]
 
-  const [signalList, setSignalList] = useState<items_t[]>(init_state)
+  const [signalList, setSignalList] = useState<signal_t[]>(init_state)
+  // type cross_talk_t = number
+
 
   // This is a callback to selector. The function passes 
   // the currently selected type and shot number up.
-  // From here, we construct a items_t and update the list.
+  // From here, we construct a signal_t and update the list.
   // See updating arrays in setState: https://react.dev/learn/updating-arrays-in-state
   const handleNewSignal = (new_type: type_e, new_shot: number) => {
     const timebase:number[] = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
-    const signal:number[] = timebase.map((i) => i + Math.random() * 0.5)
+    const samples:number[] = timebase.map((i) => i + Math.random() * 0.5)
 
     // Assign an index larger than the largest index in the array
     const new_ix = Math.max(...signalList.map(item => item.index)) + 1
 
     const new_item = {shot: new_shot, type: new_type, index: new_ix, 
-      timebase: timebase, signal: signal}
+      timebase: timebase, samples: samples}
     // Update state
     setSignalList([...signalList, new_item])
   }
@@ -56,19 +57,21 @@ function App() {
 
 
   // Callback that receives input from chart plugins
-  const [chartVal, setChartVal] = useState<number>(0)
-  const chart_cb = (new_chart_val: number) => {
-    console.log("This is chart_cb: received from chart plugin: ", new_chart_val)
-    setChartVal(new_chart_val)
+  const [crosshairVal, setCrosshairVal] = useState<cross_hair_t>({x: 216, y: 2})
+  const chart_cb = (new_crosshair_val: cross_hair_t) => {
+    console.log("This is chart_cb: received from chart plugin: ", new_crosshair_val)
+    setCrosshairVal(new_crosshair_val)
   }
 
   return (
   <>
     <ChakraProvider>
+
+  
     <Grid
-      templateRows={'400px 1fr'}
+      templateRows={'200px 1fr'}
       templateColumns={'1fr 1fr 1fr'}
-      h='800px'
+      h='600px'
       gap='4'
       // color='blackAlpha.700'
       fontWeight='bold'
@@ -77,15 +80,15 @@ function App() {
   <GridItem pl='2' bg='gray.300'>
     <Selector onClick={handleNewSignal} />
     <MyList signal_list={signalList} 
-            render={(item: items_t): string => { return to_str(item) } } 
+            render={(item: signal_t): string => { return to_str(item) } } 
             cb={remove_signal_cb} />
   </GridItem>
   <GridItem pl='2' bg='blue.100'>
-    <MyPlot signals={signalList} xtalk_cb={chart_cb} />
+    <MyPlot signals={signalList} sync_data={crosshairVal} xtalk_cb={chart_cb} />
   </GridItem>
 
   <GridItem pl='2' bg='green.100' >
-    <MyPlot signals={signalList} xtalk_cb={chart_cb} />
+    <MyPlot signals={signalList} sync_data={crosshairVal} xtalk_cb={chart_cb} />
   </GridItem>
 
 </Grid>
