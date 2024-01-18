@@ -47,6 +47,12 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
     // Reference to the plot in this component
     const chartRef = useRef(null)
 
+    // This took me a while to figure out. The crosshair plugin accesses the sync_data
+    // structure in afterDraw. The function associated with it only registers on
+    // initialization and ignores any updates on sync_data passed as props.
+    // USing a reference to this prop ensures that the plugin always has the current
+    // data.
+    // Thanks StackOverflow: https://stackoverflow.com/questions/72704153/why-function-is-not-updating-with-usecallback-in-react-and-chart-js
     const xtalk_ref = useRef(sync_data)
     xtalk_ref.current = sync_data
     console.log("xtalk_Ref.current = ", xtalk_ref.current)
@@ -114,16 +120,15 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
             console.log("global_crosshair, afterDraw. sync_data = ", xtalk_ref.current)
             const { ctx, chartArea: {bottom, top}, data } = chart
             // console.log('chart = ', chart.data)
-            console.log('args = ', args)
             // If there are datasets, find the minimum and maximum y at the current index
             if(data.datasets) {
-                const crosshair_ix = xtalk_ref.current
+                // const crosshair_ix = xtalk_ref.current
                 // console.log("Drawing for crosshair_vals = ", sync_data)
                 // Convert index for crosshair to pixels
 
                 console.log("global_crosshair: Found ", data.datasets.length, " datasets (signals)")
                 // console.log("syncRef = ", syncRef)
-                if (sync_data.x != undefined) {
+                if (xtalk_ref.current.x != undefined) {
                     ctx.beginPath()
                     ctx.lineWidth = 2
                     ctx.strokeStyle = 'gray'
