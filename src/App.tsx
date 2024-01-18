@@ -1,5 +1,5 @@
 //
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
 // import { Chart } from 'chart.js'
 // import { getRelativePosition } from 'chart.js/helpers'
@@ -25,9 +25,8 @@ function App() {
     },
   ]
 
-  const [signalList, setSignalList] = useState<signal_t[]>(init_state)
-  // type cross_talk_t = number
 
+  const [signalList, setSignalList] = useState<signal_t[]>(init_state)
 
   // This is a callback to selector. The function passes 
   // the currently selected type and shot number up.
@@ -58,8 +57,9 @@ function App() {
 
   // Callback that receives input from chart plugins
   const [crosshairVal, setCrosshairVal] = useState<cross_hair_t>({x: 216, y: 2})
+
   const chart_cb = (new_crosshair_val: cross_hair_t) => {
-    console.log("This is chart_cb: received from chart plugin: ", new_crosshair_val)
+    // console.log("This is chart_cb: received from chart plugin: ", new_crosshair_val)
     setCrosshairVal(new_crosshair_val)
   }
 

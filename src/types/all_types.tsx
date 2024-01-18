@@ -53,8 +53,23 @@ type chart_sync_t = {
 export { type cross_hair_t, type chart_sync_t }
 
 
-
 // Definition for dictionary with enum key
 type enum_dict<T extends string | symbol | number, U> = {
     [K in T]: U;
 };
+
+
+// interface crosshairEvent {
+//     msg: string
+// }
+
+// export {crosshairEvent}
+
+// declare global {
+//     interface Document { //adds definition to Document, but you can do the same with HTMLElement
+//         addEventListener<K extends keyof crosshairEvent>(type: K,
+//            listener: (this: Document, ev: crosshairEvent[K]) => void): void;
+//         dispatchEvent<K extends keyof crosshairEvent>(ev: crosshairEvent[K]): void;
+//     }
+// }
+// export { }; //keep that for TS compiler.

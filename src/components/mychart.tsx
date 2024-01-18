@@ -4,10 +4,11 @@
 //     Title, Tooltip, Legend } from 'chart.js';
 // import { ChartData, ChartOptions } from 'chart.js'
 
-import { useRef } from 'react';
-import { cross_hair_t, signal_t, to_str, type_e } from '../types/all_types'
+import { useRef, useEffect } from 'react';
+import { cross_hair_t, signal_t, to_str, type_e, customEvent } from '../types/all_types'
 import { Chart, ChartType, CategoryScale, Plugin, registerables, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+
 
 Chart.register(...registerables);
 
@@ -42,9 +43,20 @@ declare module 'chart.js' {
     }
 }
 
-const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data: cross_hair_t, xtalk_cb:any }) => {
+const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data: cross_hair_t, xtalk_cb: any }) => {
     // Reference to the plot in this component
-    const chartRef = useRef()
+    const chartRef = useRef(null)
+
+    const xtalk_ref = useRef(sync_data)
+    xtalk_ref.current = sync_data
+    console.log("xtalk_Ref.current = ", xtalk_ref.current)
+
+    // let syncRef: cross_hair_t  = useRef({x: 0, y:0} as cross_hair_t)
+
+    // useEffect(() => {
+    //     syncRef = sync_data
+    //     console.log("useEffect: syncRef = ", syncRef)
+    // })
 
     // Generate datasets from the signal list that are passed to the LinePlot
     const signal_datasets = signals.map((sig) => { return{
@@ -54,12 +66,15 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
     }})
 
 
+
     // A plugin the pushes the index of the nearest point that the mouse is
     // hovering to to the parent through a callback.
     // Relevant tutorials: https://www.youtube.com/watch?v=X0nXI9sPMgA
     const extract_hover_coords: Plugin = {
         id: "extract_hover_coords",
         events: ['mousemove'],
+
+
         afterEvent: (chart: Chart, args: any) => {
             // console.log("======== extract_hover_coords - afterEvent =======")
             // console.log("args = ", args)
@@ -67,48 +82,57 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
             const { canvas } = chart
 
             // this function picks up the nearest value in our plot
-            function nearest_value(chart: Chart, mousemove: MouseEvent){
+            function nearest_value(mousemove: MouseEvent, chart: Chart){
                 // Try and find some data points
                 const points = chart.getElementsAtEventForMode(mousemove, 'nearest', 
                     {intersect: false}, true)
                 // points.length will be > 0 (that is, set) when a dataset point is near the cursor position.
                 if (points.length){
-                    // Store x and y pixel in the callback
-                    // console.log("  Callback with  points[0] = ", points[0].index, points[0].element.x, points[0].element.y)
-                    xtalk_cb({x: points[0].element.x, y: points[0].element.y} as cross_hair_t)
+                    // Store x and y pixel of the datapoint we are hovering over through the callback
+                    const new_crosshair_coords: cross_hair_t = {x: points[0].element.x, y: points[0].element.y} 
+                    xtalk_cb( new_crosshair_coords )
+                    // let new_event = new CustomEvent<crosshairEvent>("test-event", {msg: "Hello, World"})
+                    // window.dispatchEvent(new_event)
                 }
             }
-            // If the event is inside the chart areat, add an eventListener which 
+            // If the event is inside the chart area, add an eventListener which 
             // extracts the closest data point to the cursor position.
             if(args.inChartArea) {
-                canvas.addEventListener('mousemove', (e) => nearest_value(chart, e))
+                canvas.addEventListener('mousemove', (e) => nearest_value(e, chart))
             }
         }
     }
 
-    const get_crosshair_vals = (): cross_hair_t => sync_data
+    // const get_crosshair_vals = (): cross_hair_t => sync_data
 
-    // A plugin that draws a vertical line at the positin where we are hovering over in
-    // one dataset through all plots.
+    // A plugin that draws a vertical line, where the mouse is hovering over in
+    // one chart, in every chart.
+
     const global_crosshair: Plugin = {
         id: "global_crosshair",
-
         afterDraw: (chart: Chart, args: any) => {
-            console.log("global_crosshair, afterDraw")
-            const { ctx, scales, chartArea: {left, bottom, top}, data } = chart
+            console.log("global_crosshair, afterDraw. sync_data = ", xtalk_ref.current)
+            const { ctx, chartArea: {bottom, top}, data } = chart
+            // console.log('chart = ', chart.data)
+            console.log('args = ', args)
             // If there are datasets, find the minimum and maximum y at the current index
             if(data.datasets) {
-                console.log("We got ", data.datasets.length, " datasets here")
-                const crosshair_ix = get_crosshair_vals()
-                console.log("Drawing for ix_y = ", crosshair_ix)
+                const crosshair_ix = xtalk_ref.current
+                // console.log("Drawing for crosshair_vals = ", sync_data)
                 // Convert index for crosshair to pixels
-                if (crosshair_ix.x != undefined) {
+
+                console.log("global_crosshair: Found ", data.datasets.length, " datasets (signals)")
+                // console.log("syncRef = ", syncRef)
+                if (sync_data.x != undefined) {
                     ctx.beginPath()
                     ctx.lineWidth = 2
                     ctx.strokeStyle = 'gray'
                     ctx.setLineDash([6, 6])
-                    ctx.moveTo(crosshair_ix.x, bottom)
-                    ctx.lineTo(crosshair_ix.x, top)
+                    ctx.moveTo(xtalk_ref.current.x, bottom)
+                    ctx.lineTo(xtalk_ref.current.x, top)
+
+                    // ctx.moveTo(crosshair_ix.x, bottom)
+                    // ctx.lineTo(crosshair_ix.x, top)
                     ctx.stroke()
                 }
             }
@@ -177,14 +201,12 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
             if (ge_value[0] !== undefined) {
                 const ix_dataset = ge_value[0].datasetIndex 
                 const ix_signal = ge_value[0].index
+                console.log("ix_dataset = ", ix_dataset, ", ix_Signal = ", ix_signal)
             }
             else {
                 // Not clicked on a dataset. Do nothing.
                 console.log("You did not click on a dataset :(")
             }
-
-
-
             // const canvasPosition = getRelativePosition(e, chart)
             // console.log("canvasPosition = ", canvasPosition)
             // const dataX = chart?.scales.x.getValueForPixel(canvasPosition.x)
@@ -216,7 +238,6 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
             Drawing cross-hair at {sync_data.x} - {sync_data.y}
         </div>
         {/* // If we want to pass plugins we can also do this like: */}
-        {/* // <Line ref={chartRef} data={data} options={options} plugins={[extract_hover_coords]} onClick={lineplot_callback}/> */}
         <Line ref={chartRef} data={data} options={options} plugins={[extract_hover_coords, global_crosshair]} onClick={lineplot_callback}/>
         </>
     )
