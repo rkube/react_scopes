@@ -34,6 +34,26 @@ const to_str = (it: signal_t) => {
 
 export {type_e, type signal_t, type_string_repr, to_str}
 
+
+/*************************************************************************** 
+ * 
+ * Types used by the app itself
+ * 
+ ****************************************************************************/
+
+
+// This is nice: https://danielbarta.com/literal-iteration-typescript/
+// It allows us to access the valid values of ptr_mode_t like
+// ptr_mode_types.map((key, value) => {console.log(`key=${key} value=${value}`)})
+// key=mode_hover value=0
+// key=mode_crosshair value=1
+export const ptr_mode_types = ["mode_hover", "mode_crosshair"] as const
+type ptr_mode_t = typeof ptr_mode_types[number]
+
+
+export { type ptr_mode_t }
+
+
 /*************************************************************************** 
  * 
  * Types used to synchronize charts

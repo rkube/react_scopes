@@ -33,13 +33,9 @@ const pick_color = (sig_type:type_e): string => {
 // This is an interface for the hover plugin
 declare module 'chart.js' {
     interface PluginOptionsByType<TType extends ChartType> {
-      extract_hover_coords?: {
+      crosshair_plugin?: {
         lineColor: string
-        arg1: string
-      },
-      global_crosshair?: {
-        lineColor: string
-      }
+        }
     }
 }
 
@@ -76,10 +72,9 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
     // A plugin the pushes the index of the nearest point that the mouse is
     // hovering to to the parent through a callback.
     // Relevant tutorials: https://www.youtube.com/watch?v=X0nXI9sPMgA
-    const extract_hover_coords: Plugin = {
-        id: "extract_hover_coords",
+    const crosshair_plugin: Plugin = {
+        id: "crosshair_plugin",
         events: ['mousemove'],
-
 
         afterEvent: (chart: Chart, args: any) => {
             // console.log("======== extract_hover_coords - afterEvent =======")
@@ -97,8 +92,6 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
                     // Store x and y pixel of the datapoint we are hovering over through the callback
                     const new_crosshair_coords: cross_hair_t = {x: points[0].element.x, y: points[0].element.y} 
                     xtalk_cb( new_crosshair_coords )
-                    // let new_event = new CustomEvent<crosshairEvent>("test-event", {msg: "Hello, World"})
-                    // window.dispatchEvent(new_event)
                 }
             }
             // If the event is inside the chart area, add an eventListener which 
@@ -106,28 +99,17 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
             if(args.inChartArea) {
                 canvas.addEventListener('mousemove', (e) => nearest_value(e, chart))
             }
-        }
-    }
-
-    // const get_crosshair_vals = (): cross_hair_t => sync_data
-
-    // A plugin that draws a vertical line, where the mouse is hovering over in
-    // one chart, in every chart.
-
-    const global_crosshair: Plugin = {
-        id: "global_crosshair",
+        },
+ 
         afterDraw: (chart: Chart, args: any) => {
             console.log("global_crosshair, afterDraw. sync_data = ", xtalk_ref.current)
             const { ctx, chartArea: {bottom, top}, data } = chart
             // console.log('chart = ', chart.data)
             // If there are datasets, find the minimum and maximum y at the current index
             if(data.datasets) {
-                // const crosshair_ix = xtalk_ref.current
-                // console.log("Drawing for crosshair_vals = ", sync_data)
                 // Convert index for crosshair to pixels
 
                 console.log("global_crosshair: Found ", data.datasets.length, " datasets (signals)")
-                // console.log("syncRef = ", syncRef)
                 if (xtalk_ref.current.x != undefined) {
                     ctx.beginPath()
                     ctx.lineWidth = 2
@@ -135,9 +117,6 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
                     ctx.setLineDash([6, 6])
                     ctx.moveTo(xtalk_ref.current.x, bottom)
                     ctx.lineTo(xtalk_ref.current.x, top)
-
-                    // ctx.moveTo(crosshair_ix.x, bottom)
-                    // ctx.lineTo(crosshair_ix.x, top)
                     ctx.stroke()
                 }
             }
@@ -156,7 +135,7 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
                 display: true,
                 text: ' this is the title '
             },
-            extract_hover_coords: {
+            crosshair_plugin: {
                 lineColor: 'blue'
             }
         },
@@ -243,7 +222,7 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
             Drawing cross-hair at {sync_data.x} - {sync_data.y}
         </div>
         {/* // If we want to pass plugins we can also do this like: */}
-        <Line ref={chartRef} data={data} options={options} plugins={[extract_hover_coords, global_crosshair]} onClick={lineplot_callback}/>
+        <Line ref={chartRef} data={data} options={options} plugins={[crosshair_plugin]} onClick={lineplot_callback}/>
         </>
     )
 }

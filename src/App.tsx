@@ -1,16 +1,13 @@
 //
 import { useState } from 'react'
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
-// import { Chart } from 'chart.js'
-// import { getRelativePosition } from 'chart.js/helpers'
-// import { getElementAtEvent } from 'react-chartjs-2'
+import { RadioGroup, Radio, Stack } from '@chakra-ui/react'
 import './App.css'
 
-import { type_e, signal_t, to_str, cross_hair_t } from './types/all_types'
+import { type_e, signal_t, to_str, cross_hair_t, ptr_mode_types, ptr_mode_t } from './types/all_types'
 import MyList from './components/list'
 import Selector from './components/selector'
 import MyPlot from './components/mychart'
-
 
 
 function App() {
@@ -27,6 +24,8 @@ function App() {
 
 
   const [signalList, setSignalList] = useState<signal_t[]>(init_state)
+
+  const [ptrMode, setPtrMode] = useState<ptr_mode_t>("mode_hover")
 
   // This is a callback to selector. The function passes 
   // the currently selected type and shot number up.
@@ -63,6 +62,7 @@ function App() {
     setCrosshairVal(new_crosshair_val)
   }
 
+
   return (
   <>
     <ChakraProvider>
@@ -76,6 +76,17 @@ function App() {
       // color='blackAlpha.700'
       fontWeight='bold'
     >
+
+
+        {/* https://stackoverflow.com/questions/55601342/using-enumerations-in-react-select */}
+
+    <GridItem colSpan={3}>
+      <RadioGroup onChange={(e) => {console.log("radio: e=", e);}}>
+      {ptr_mode_types.map((key, value) => (
+      <Radio value={key}> {key} </Radio>
+      ))}
+      </RadioGroup> 
+    </GridItem>  
 
   <GridItem pl='2' bg='gray.300'>
     <Selector onClick={handleNewSignal} />
