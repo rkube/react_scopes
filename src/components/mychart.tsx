@@ -44,60 +44,6 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
     // Reference to the plot in this component
     const chartRef = useRef(null)
 
-
-    // const crosshair_plugin: {
-    //     id: "crosshair-plugin",
-    //     events: ['mousemove'],
-        
-    //     afterEvent: (chart: Chart, args: any) => {
-    //         // console.log("======== extract_hover_coords - afterEvent =======")
-    //         // console.log("args = ", args)
-    //         // Argument destructuring for chart:
-    //         const { canvas } = chart
-
-    //         // this function picks up the nearest value in our plot
-    //         function nearest_value(mousemove: MouseEvent, chart: Chart){
-    //             // Try and find some data points
-    //             const points = chart.getElementsAtEventForMode(mousemove, 'nearest', 
-    //                 {intersect: false}, true)
-    //             // points.length will be > 0 (that is, set) when a dataset point is near the cursor position.
-    //             if (points.length){
-    //                 // Store x and y pixel of the datapoint we are hovering over through the callback
-    //                 const new_crosshair_coords: cross_hair_t = {x: points[0].element.x, y: points[0].element.y} 
-    //                 xtalk_cb( new_crosshair_coords )
-    //             }
-    //         }
-    //         // If the event is inside the chart area, add an eventListener which 
-    //         // extracts the closest data point to the cursor position.
-    //         if(args.inChartArea) {
-    //             canvas.addEventListener('mousemove', (e) => nearest_value(e, chart))
-    //         }
-    //     },
-
-    //     afterDraw: (chart: Chart, args: any) => {
-    //         console.log("global_crosshair, afterDraw. sync_data = ", xtalk_ref.current)
-    //         const { ctx, chartArea: {bottom, top}, data } = chart
-    //         // console.log('chart = ', chart.data)
-    //         // If there are datasets, find the minimum and maximum y at the current index
-    //         if(data.datasets) {
-    //             // Convert index for crosshair to pixels
-
-    //             console.log("global_crosshair: Found ", data.datasets.length, " datasets (signals)")
-    //             if (xtalk_ref.current.x != undefined) {
-    //                 ctx.beginPath()
-    //                 ctx.lineWidth = 2
-    //                 ctx.strokeStyle = 'gray'
-    //                 ctx.setLineDash([6, 6])
-    //                 ctx.moveTo(xtalk_ref.current.x, bottom)
-    //                 ctx.lineTo(xtalk_ref.current.x, top)
-    //                 ctx.stroke()
-    //             }
-    //         }
-    //     }
-    // }
-
-    
-
     // This took me a while to figure out. The crosshair plugin accesses the sync_data
     // structure in afterDraw. The function associated with it only registers on
     // initialization and ignores any updates on sync_data passed as props.

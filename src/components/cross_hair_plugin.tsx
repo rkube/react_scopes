@@ -22,6 +22,8 @@ interface crosshair_plugin_i extends Plugin {
     xtalk_cb: (new_crosshair_val: cross_hair_t) => void;
     
     afterEvent: (chart: Chart, args: event_args_i, options: any) => void;
+
+    afterDraw: (chart: Chart, args: any) => void;
 }
 
 export { type crosshair_plugin_i }
@@ -61,6 +63,21 @@ class cross_hair_plugin implements crosshair_plugin_i {
         // extracts the closest data point to the cursor position.
         if(args.inChartArea) {
             canvas.addEventListener('mousemove', (e) => nearest_value(e, chart, this.xtalk_cb))
+        }
+    }
+
+    afterDraw = (chart: Chart, args: any) => {
+        const { ctx, chartArea: {bottom, top}, data } = chart
+        if(data.datasets) {
+            if (this.sync_ref.current.x != undefined) {
+                ctx.beginPath()
+                ctx.lineWidth = 2
+                ctx.strokeStyle = 'gray'
+                ctx.setLineDash([6, 6])
+                ctx.moveTo(this.sync_ref.current.x, bottom)
+                ctx.lineTo(this.sync_ref.current.x, top)
+                ctx.stroke()
+            }
         }
     }
     
