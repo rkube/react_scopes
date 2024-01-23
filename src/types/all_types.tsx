@@ -1,5 +1,3 @@
-
-
 /*************************************************************************** 
  * 
  * Types for signal representation
@@ -16,7 +14,6 @@ const type_string_repr: enum_dict<type_e, string> = {
     [type_e.Type3]: "Type_3",
 }
 
-
 // Defines a signal along with some metadata
 type signal_t = {
     index: number,
@@ -26,14 +23,12 @@ type signal_t = {
     timebase: number[]
 }
 
-
 // String representation of a signal_t
 const to_str = (it: signal_t) => {
     return(it.shot.toString() + " " + type_string_repr[it.type])
 }
 
 export {type_e, type signal_t, type_string_repr, to_str}
-
 
 /*************************************************************************** 
  * 
@@ -47,9 +42,10 @@ export {type_e, type signal_t, type_string_repr, to_str}
 // ptr_mode_types.map((key, value) => {console.log(`key=${key} value=${value}`)})
 // key=mode_hover value=0
 // key=mode_crosshair value=1
+// See as const keyword:
+// https://www.totaltypescript.com/concepts/as-const
 export const ptr_mode_types = ["mode_hover", "mode_crosshair"] as const
 type ptr_mode_t = typeof ptr_mode_types[number]
-
 
 export { type ptr_mode_t }
 
@@ -78,18 +74,3 @@ type enum_dict<T extends string | symbol | number, U> = {
     [K in T]: U;
 };
 
-
-// interface crosshairEvent {
-//     msg: string
-// }
-
-// export {crosshairEvent}
-
-// declare global {
-//     interface Document { //adds definition to Document, but you can do the same with HTMLElement
-//         addEventListener<K extends keyof crosshairEvent>(type: K,
-//            listener: (this: Document, ev: crosshairEvent[K]) => void): void;
-//         dispatchEvent<K extends keyof crosshairEvent>(ev: crosshairEvent[K]): void;
-//     }
-// }
-// export { }; //keep that for TS compiler.

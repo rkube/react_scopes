@@ -58,7 +58,6 @@ function App() {
   const [crosshairVal, setCrosshairVal] = useState<cross_hair_t>({x: 216, y: 2})
 
   const chart_cb = (new_crosshair_val: cross_hair_t) => {
-    // console.log("This is chart_cb: received from chart plugin: ", new_crosshair_val)
     setCrosshairVal(new_crosshair_val)
   }
 
@@ -76,7 +75,6 @@ function App() {
       // color='blackAlpha.700'
       fontWeight='bold'
     >
-
 
         {/* https://stackoverflow.com/questions/55601342/using-enumerations-in-react-select */}
 
