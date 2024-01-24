@@ -16,13 +16,12 @@ const MyList = ({ signal_list, render, cb }: signal_list_i) => {
     return (
         <SimpleGrid gap={12} px={12} columns={2}>
 
-
         <List size="l" variant="custom" spacing={2}>
             {signal_list.map((item, ix) => (
                 <ListItem key={ix}>
                     <Stack direction='row'>
                     <Text color="black" fontSize='lg'> {render(item)} </Text>
-                    <Button onClick={() => cb(ix)} size='sm'> <DeleteIcon/> </Button>
+                    <Button onClick={() => cb(item.index)} size='sm'> <DeleteIcon/> </Button>
                     </Stack>
                 </ListItem>
             ))}

@@ -4,7 +4,7 @@ import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
 import { RadioGroup, Radio, Stack } from '@chakra-ui/react'
 import './App.css'
 
-import { type_e, signal_t, to_str, cross_hair_t, ptr_mode_types, ptr_mode_t } from './types/all_types'
+import { type_e, signal_t, to_str, cross_hair_t, ptr_mode_types, ptr_mode_t, type_string_repr } from './types/all_types'
 import MyList from './components/list'
 import Selector from './components/selector'
 import MyPlot from './components/mychart'
@@ -36,7 +36,12 @@ function App() {
     const samples:number[] = timebase.map((i) => i + Math.random() * 0.5)
 
     // Assign an index larger than the largest index in the array
-    const new_ix = Math.max(...signalList.map(item => item.index)) + 1
+    let new_ix = 0;
+    if (signalList.length == 0) {
+      new_ix = 0
+    } else {
+      new_ix = Math.max(...signalList.map(item => item.index)) + 1
+    }
 
     const new_item = {shot: new_shot, type: new_type, index: new_ix, 
       timebase: timebase, samples: samples}
@@ -48,9 +53,12 @@ function App() {
   // Arguments:
   // ix (number) - The index of the signal that needs to be removed
   const remove_signal_cb = (ix: number) => {
-    console.log("remove_signal_cb here, ix=", ix)
+    console.log("============= remove_signal_cb. Removing ix=", ix)
+    console.log("before: signalList = ", signalList)
     const new_signal_list = signalList.filter((item) => item.index != ix)
     setSignalList(new_signal_list)
+    console.log("after: signalList = ", new_signal_list)
+    console.log("============= done")
   }
 
 
@@ -66,7 +74,6 @@ function App() {
   <>
     <ChakraProvider>
 
-  
     <Grid
       templateRows={'200px 1fr'}
       templateColumns={'1fr 1fr 1fr'}
@@ -80,16 +87,17 @@ function App() {
 
     <GridItem colSpan={3}>
       <RadioGroup onChange={(e) => {console.log("radio: e=", e);}}>
-      {ptr_mode_types.map((key, value) => (
-      <Radio value={key}> {key} </Radio>
-      ))}
+        {ptr_mode_types.map((key) => (
+          <Radio value={key}> {key} </Radio>
+        ))}
       </RadioGroup> 
     </GridItem>  
 
   <GridItem pl='2' bg='gray.300'>
     <Selector onClick={handleNewSignal} />
     <MyList signal_list={signalList} 
-            render={(item: signal_t): string => { return to_str(item) } } 
+            // render={(item: signal_t): string => { return to_str(item) } } 
+            render={(item: signal_t): string => {return(item.shot.toString() + " " + item.index.toString() + " " + type_string_repr[item.type])}}
             cb={remove_signal_cb} />
   </GridItem>
   <GridItem pl='2' bg='blue.100'>

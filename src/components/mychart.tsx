@@ -27,15 +27,14 @@ const pick_color = (sig_type:type_e): string => {
 }
    
 
-
-// This is an interface for the hover plugin
-declare module 'chart.js' {
-    interface PluginOptionsByType<TType extends ChartType> {
-      crosshair_plugin?: {
-        lineColor: string
-        }
-    }
-}
+// // This is an interface for the hover plugin
+// declare module 'chart.js' {
+//     interface PluginOptionsByType<TType extends ChartType> {
+//       crosshair_plugin?: {
+//         lineColor: string
+//         }
+//     }
+// }
 
 
 
@@ -52,7 +51,7 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
     // Thanks StackOverflow: https://stackoverflow.com/questions/72704153/why-function-is-not-updating-with-usecallback-in-react-and-chart-js
     const xtalk_ref = useRef(sync_data)
     xtalk_ref.current = sync_data
-    console.log("xtalk_Ref.current = ", xtalk_ref.current)
+    // console.log("xtalk_Ref.current = ", xtalk_ref.current)
     const my_crosshair_plugin = new cross_hair_plugin(xtalk_ref, xtalk_cb)
 
     // let syncRef: cross_hair_t  = useRef({x: 0, y:0} as cross_hair_t)

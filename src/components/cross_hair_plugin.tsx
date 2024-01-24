@@ -40,11 +40,10 @@ class cross_hair_plugin implements crosshair_plugin_i {
         this.events = ["mousemove" as keyof HTMLElementEventMap]
         this.xtalk_cb = _cb
         this.sync_ref = _sr
-        console.log("Crosshair plugin consructor here ")
     }
 
     afterEvent = (chart: Chart, args: event_args_i) => {
-        console.log("This is after_event: ", chart)
+        // console.log("This is after_event: ", chart)
         const {canvas} = chart;
 
         // this function picks up the nearest value in our plot
