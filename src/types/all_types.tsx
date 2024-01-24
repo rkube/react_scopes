@@ -3,6 +3,10 @@
  * Types for signal representation
  * 
  ****************************************************************************/
+// export const source_types = ["Type1", "Type2", "Type3"] as const
+// export type source_t = typeof source_types[number]
+
+
 // A signal must be of a specific type. Enumerate these types here:
 enum type_e {Type1, Type2, Type3}
 

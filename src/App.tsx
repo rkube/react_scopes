@@ -1,10 +1,10 @@
 //
 import { useState } from 'react'
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
-import { RadioGroup, Radio, Stack } from '@chakra-ui/react'
+import { RadioGroup, Radio } from '@chakra-ui/react'
 import './App.css'
 
-import { type_e, signal_t, to_str, cross_hair_t, ptr_mode_types, ptr_mode_t } from './types/all_types'
+import { source_t, signal_t, to_str, cross_hair_t, ptr_mode_types, ptr_mode_t } from './types/all_types'
 import MyList from './components/list'
 import Selector from './components/selector'
 import MyPlot from './components/mychart'
@@ -16,7 +16,7 @@ function App() {
     {
       index: 0,
       shot: 100,
-      type: type_e.Type1,
+      source: "Type1",
       timebase: [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0],
       samples: [0.0, 0.48, 0.84, 1.0, 0.91, 0.60, 0.14]
     },
@@ -31,7 +31,7 @@ function App() {
   // the currently selected type and shot number up.
   // From here, we construct a signal_t and update the list.
   // See updating arrays in setState: https://react.dev/learn/updating-arrays-in-state
-  const handleNewSignal = (new_type: type_e, new_shot: number) => {
+  const handleNewSignal = (new_type: source_tsource_, new_shot: number) => {
     const timebase:number[] = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
     const samples:number[] = timebase.map((i) => i + Math.random() * 0.5)
 
