@@ -20,9 +20,7 @@ interface crosshair_plugin_i extends Plugin {
     events: (keyof HTMLElementEventMap)[] | undefined
     sync_ref: React.MutableRefObject<cross_hair_t>
     xtalk_cb: (new_crosshair_val: cross_hair_t) => void;
-    
     afterEvent: (chart: Chart, args: event_args_i, options: any) => void;
-
     afterDraw: (chart: Chart, args: any) => void;
 }
 
@@ -36,6 +34,7 @@ class cross_hair_plugin implements crosshair_plugin_i {
     
     constructor(_sr: React.MutableRefObject<cross_hair_t>, 
             _cb: (new_crosshair_val: cross_hair_t) => void) {
+        console.log("Creating new crosshair plugin")
         this.id = "crosshair_plugin"
         this.events = ["mousemove" as keyof HTMLElementEventMap]
         this.xtalk_cb = _cb
@@ -66,6 +65,7 @@ class cross_hair_plugin implements crosshair_plugin_i {
     }
 
     afterDraw = (chart: Chart, args: any) => {
+        console.log("Calling afterDraw")
         const { ctx, chartArea: {bottom, top}, data } = chart
         if(data.datasets) {
             if (this.sync_ref.current.x != undefined) {

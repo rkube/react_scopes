@@ -1,13 +1,14 @@
 //
 import { useState } from 'react'
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
-import { RadioGroup, Radio, Stack } from '@chakra-ui/react'
+import { RadioGroup, Radio} from '@chakra-ui/react'
 import './App.css'
 
 import { type_e, signal_t, to_str, cross_hair_t, ptr_mode_types, ptr_mode_t, type_string_repr } from './types/all_types'
 import MyList from './components/list'
 import Selector from './components/selector'
-import MyPlot from './components/mychart'
+// import MyPlot from './components/mychart'
+import { ScopesGrid } from './components/chart_area'
 
 
 function App() {
@@ -22,10 +23,8 @@ function App() {
     },
   ]
 
-
   const [signalList, setSignalList] = useState<signal_t[]>(init_state)
-
-  const [ptrMode, setPtrMode] = useState<ptr_mode_t>("mode_hover")
+  const [ptr_mode, set_ptr_mode] = useState<ptr_mode_t>("mode_hover")
 
   // This is a callback to selector. The function passes 
   // the currently selected type and shot number up.
@@ -53,21 +52,11 @@ function App() {
   // Arguments:
   // ix (number) - The index of the signal that needs to be removed
   const remove_signal_cb = (ix: number) => {
-    console.log("============= remove_signal_cb. Removing ix=", ix)
-    console.log("before: signalList = ", signalList)
     const new_signal_list = signalList.filter((item) => item.index != ix)
     setSignalList(new_signal_list)
-    console.log("after: signalList = ", new_signal_list)
-    console.log("============= done")
   }
 
 
-  // Callback that receives input from chart plugins
-  const [crosshairVal, setCrosshairVal] = useState<cross_hair_t>({x: 216, y: 2})
-
-  const chart_cb = (new_crosshair_val: cross_hair_t) => {
-    setCrosshairVal(new_crosshair_val)
-  }
 
 
   return (
@@ -76,8 +65,8 @@ function App() {
 
     <Grid
       templateRows={'200px 1fr'}
-      templateColumns={'1fr 1fr 1fr'}
-      h='600px'
+      templateColumns={'0.2fr 2fr'}
+      h='500px'
       gap='4'
       // color='blackAlpha.700'
       fontWeight='bold'
@@ -85,30 +74,28 @@ function App() {
 
         {/* https://stackoverflow.com/questions/55601342/using-enumerations-in-react-select */}
 
-    <GridItem colSpan={3}>
-      <RadioGroup onChange={(e) => {console.log("radio: e=", e);}}>
+    <GridItem colSpan={2}>
+      <RadioGroup onChange={(e) => {set_ptr_mode(e as ptr_mode_t); console.log("ptr_mode = ", e)}}>
         {ptr_mode_types.map((key) => (
           <Radio value={key}> {key} </Radio>
         ))}
       </RadioGroup> 
+      Pointer Mode: {ptr_mode}
     </GridItem>  
 
   <GridItem pl='2' bg='gray.300'>
     <Selector onClick={handleNewSignal} />
     <MyList signal_list={signalList} 
-            // render={(item: signal_t): string => { return to_str(item) } } 
-            render={(item: signal_t): string => {return(item.shot.toString() + " " + item.index.toString() + " " + type_string_repr[item.type])}}
+            render={(item: signal_t): string => {return(`${item.shot.toString()}  ${type_string_repr[item.type]}`)}}
             cb={remove_signal_cb} />
   </GridItem>
-  <GridItem pl='2' bg='blue.100'>
-    <MyPlot signals={signalList} sync_data={crosshairVal} xtalk_cb={chart_cb} />
-  </GridItem>
 
-  <GridItem pl='2' bg='green.100' >
-    <MyPlot signals={signalList} sync_data={crosshairVal} xtalk_cb={chart_cb} />
+  <GridItem pl='2'>
+  <ScopesGrid signal_list={signalList} ptr_mode={ptr_mode} />
   </GridItem>
 
 </Grid>
+
 
 
       </ChakraProvider>

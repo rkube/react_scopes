@@ -1,8 +1,8 @@
 // Diong plotting stuff
 
 import { useRef, useEffect } from 'react';
-import { cross_hair_t, signal_t, to_str, type_e } from '../types/all_types'
-import { Chart, ChartType, Plugin, registerables, ChartOptions } from 'chart.js';
+import { cross_hair_t, ptr_mode_t, signal_t, to_str, type_e } from '../types/all_types'
+import { Chart, ChartType, Plugin as PluginC, registerables, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
 import { cross_hair_plugin, crosshair_plugin_i } from './cross_hair_plugin';
@@ -39,9 +39,12 @@ const pick_color = (sig_type:type_e): string => {
 
 
 
-const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data: cross_hair_t, xtalk_cb: any }) => {
+// const MyPlot = ({signals, ptr_mode, sync_data, xtalk_cb}: { signals: signal_t[], ptr_mode: ptr_mode_t, sync_data: cross_hair_t, xtalk_cb: any }) => {
+    const MyPlot = ({signals, plugin_list}: { signals: signal_t[], plugin_list: any[]}) => {
     // Reference to the plot in this component
     const chartRef = useRef(null)
+
+    console.log("plugin_list = ", plugin_list)
 
     // This took me a while to figure out. The crosshair plugin accesses the sync_data
     // structure in afterDraw. The function associated with it only registers on
@@ -49,12 +52,8 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
     // USing a reference to this prop ensures that the plugin always has the current
     // data.
     // Thanks StackOverflow: https://stackoverflow.com/questions/72704153/why-function-is-not-updating-with-usecallback-in-react-and-chart-js
-    const xtalk_ref = useRef(sync_data)
-    xtalk_ref.current = sync_data
-    // console.log("xtalk_Ref.current = ", xtalk_ref.current)
-    const my_crosshair_plugin = new cross_hair_plugin(xtalk_ref, xtalk_cb)
-
-    // let syncRef: cross_hair_t  = useRef({x: 0, y:0} as cross_hair_t)
+    // const xtalk_ref = useRef(sync_data)
+    // xtalk_ref.current = sync_data
 
     // useEffect(() => {
     //     syncRef = sync_data
@@ -165,15 +164,25 @@ const MyPlot = ({signals, sync_data, xtalk_cb}: { signals: signal_t[], sync_data
         labels,
         datasets: signal_datasets
       };
+
+    // let active_plugins = []
+    // console.log("Testing, ptr_mode = ", ptr_mode)
+    // if (ptr_mode == 'mode_crosshair') {
+    //     console.log("Activating crosshair")
+    //     // const my_crosshair_plugin = new cross_hair_plugin(xtalk_ref, xtalk_cb)
+    //     active_plugins.push(new cross_hair_plugin(xtalk_ref, xtalk_cb))
+    // }
+    // console.log("active_plugins = ", active_plugins)
+
+    // const my_crosshair_plugin = new cross_hair_plugin(xtalk_ref, xtalk_cb)
+
     
     return(
         <>
-        <div>
-            Drawing cross-hair at {sync_data.x} - {sync_data.y}
-        </div>
+
         {/* // If we want to pass plugins we can also do this like: */}
-        {/* <Line ref={chartRef} data={data} options={options} plugins={[crosshair_plugin]} onClick={lineplot_callback}/> */}
-        <Line ref={chartRef} data={data} options={options} plugins={[my_crosshair_plugin]} onClick={lineplot_callback}/>
+        {/* <Line ref={chartRef} data={data} options={options} plugins={[my_crosshair_plugin]} onClick={lineplot_callback}/> */}
+        <Line ref={chartRef} data={data} options={options} plugins={plugin_list} onClick={lineplot_callback}/>
         </>
     )
 }
