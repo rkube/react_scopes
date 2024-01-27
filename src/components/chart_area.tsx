@@ -12,14 +12,18 @@ import { cross_hair_plugin, crosshair_plugin_i } from "./cross_hair_plugin"
 
 function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode: ptr_mode_t}) {
 
-    // const [plugin_list, set_plugin_list] = useState< (PluginC | crosshair_plugin_i)[] >([])
     // Value for the crosshair plugin, which needs to by synced across the scopes
     const [crosshair_val, set_crosshair_val] = useState<cross_hair_t>({x: 216, y: 2})
     const xtalk_ref = useRef(crosshair_val)
+    // This took me a while to figure out. The crosshair plugin accesses the sync_data
+    // structure in afterDraw. The function associated with it only registers on
+    // initialization and ignores any updates on sync_data passed as props.
+    // USing a reference to this prop ensures that the plugin always has the current
+    // data.
+    // Thanks StackOverflow: https://stackoverflow.com/questions/72704153/why-function-is-not-updating-with-usecallback-in-react-and-chart-js
+    // const xtalk_ref = useRef(sync_data)
+    // xtalk_ref.current = sync_data
     xtalk_ref.current = crosshair_val
-
-
-    const [foo, set_foo] = useState<string>("nothing")
 
 
     const chart_cb = (new_crosshair_val: cross_hair_t) => {
@@ -27,6 +31,8 @@ function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode:
     }
 
 
+    // Today I learned: Don't put this in a stateful variable. Just assemble the list
+    // based on the props this component receives and pass that list to the MyPlot component
     let plugin_list = []
     if (ptr_mode == "mode_crosshair") {
         plugin_list.push(new cross_hair_plugin(xtalk_ref, chart_cb))
@@ -35,15 +41,10 @@ function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode:
     }
 
 
-
-    // const plugin_list = [new cross_hair_plugin(xtalk_ref, chart_cb)]
-
-
     return (
         <>
         <div>
             Drawing cross-hair at {crosshair_val.x} - {crosshair_val.y}
-            foo = {foo}
         </div>
 
         <Grid

@@ -26,6 +26,9 @@ interface crosshair_plugin_i extends Plugin {
 
 export { type crosshair_plugin_i }
 
+// A plugin the pushes the index of the nearest point that the mouse is
+// hovering to to the parent through a callback.
+// Relevant tutorials: https://www.youtube.com/watch?v=X0nXI9sPMgA
 class cross_hair_plugin implements crosshair_plugin_i {
     id: string;
     events: (keyof HTMLElementEventMap)[];
