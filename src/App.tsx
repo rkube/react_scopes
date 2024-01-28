@@ -56,8 +56,6 @@ function App() {
     setSignalList(new_signal_list)
   }
 
-  const [value, setValue] = useState<number>(1)
-
   return (
   <>
     <ChakraProvider>

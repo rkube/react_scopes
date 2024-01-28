@@ -20,7 +20,8 @@ interface crosshair_plugin_i extends Plugin {
     events: (keyof HTMLElementEventMap)[] | undefined
     sync_ref: React.MutableRefObject<cross_hair_t>
     xtalk_cb: (new_crosshair_val: cross_hair_t) => void;
-    // install:(chart: Chart, args: event_args_i) => void;
+    install:(chart: Chart, args: event_args_i) => void;
+    start:(chart: Chart, args: event_args_i) => void;
     // reset:(chart: Chart, args: event_args_i) => void;
     // afterInit: (chart: Chart) => void;
     // destroy: (chart: Chart) => void;
@@ -46,6 +47,7 @@ class cross_hair_plugin implements crosshair_plugin_i {
     
     constructor(_sr: React.MutableRefObject<cross_hair_t>, 
             _cb: (new_crosshair_val: cross_hair_t) => void) {
+        console.log("---------------------- Constructor--------")
         this.id = "crosshair-plugin"
         this.events = ["mousemove" as keyof HTMLElementEventMap]
         this.xtalk_cb = _cb
@@ -54,10 +56,15 @@ class cross_hair_plugin implements crosshair_plugin_i {
     }
 
     afterInit = (chart: Chart, args: any) => {
-        // console.log("This if afterInit")
+        console.log("+++++++++++++++++++++++++++++++++++This if afterInit")
+    }
+
+    start = (chart: Chart, args: any) => {
+        console.log("+++++++++++++++++++++++++++++++++++This if start")
         const {canvas} = chart;
 
         function nearest_value(mousemove: MouseEvent, chart: Chart, cb: (new_crosshair_val: cross_hair_t) => void){
+            console.log("oooooooooooooooo nearest_value oooooooooooooo")
             // Try and find some data points
             try{
                 const points = chart.getElementsAtEventForMode(mousemove, 'nearest', 
@@ -76,13 +83,35 @@ class cross_hair_plugin implements crosshair_plugin_i {
         canvas.addEventListener('mousemove', this.my_event_listener)
     }
 
+    install = (chart: Chart, args: any) => {
+        console.log("xxxxxxxxxxxxxxxxxxxxxxxx install xxxxxxxxxxxxxxxxxxxxxxxx")
+
+    }
+
     afterEvent = (chart: Chart, args: event_args_i) => {
+        console.log("AfterEvent Here")
+        // const { ctx, chartArea: {bottom, top}, data } = chart
+        // if(data.datasets) {
+        //     console.log("--- afterDraw: data.datasets = ", data.datasets)
+        //     console.log("--- current position = ", this.sync_ref.current.x)
+        //     if (this.sync_ref.current.x != undefined) {
+        //         ctx.beginPath()
+        //         ctx.lineWidth = 2
+        //         ctx.strokeStyle = 'gray'
+        //         ctx.setLineDash([6, 6])
+        //         ctx.moveTo(this.sync_ref.current.x, bottom)
+        //         ctx.lineTo(this.sync_ref.current.x, top)
+        //         ctx.stroke()
+        //     }
+        // }
     }
 
     afterDraw = (chart: Chart, args: any) => {
+        console.log("afterDraw here")
         const { ctx, chartArea: {bottom, top}, data } = chart
-        // console.log("afterDraw, ctx=")
         if(data.datasets) {
+            console.log("--- afterDraw: data.datasets = ", data.datasets)
+            console.log("--- current position = ", this.sync_ref.current.x)
             if (this.sync_ref.current.x != undefined) {
                 ctx.beginPath()
                 ctx.lineWidth = 2

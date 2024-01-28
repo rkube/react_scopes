@@ -39,18 +39,19 @@ const MyPlot = ({signals, plugin_list, ptr_mode}: { signals: signal_t[], plugin_
     ChartJS.register(plugin_list[0])
 
     // // If we want to register a plugin, do it here.
-    // if (ptr_mode == 'mode_crosshair') {
-    //     // ChartJS.register(plugin_list[0])
-    //     const active_plugin = ChartJS.registry.plugins.get("crosshair-plugin")
-    //     console.log('mode_crosshair. active plugins:', active_plugin)
-    // } 
-    // if (ptr_mode == 'mode_hover') {
-    //     const active_plugin = ChartJS.registry.plugins.get("crosshair-plugin")
-    //     console.log("Hover mode, active plugins: ", active_plugin)
-    //     if(active_plugin) {
-    //         ChartJS.unregister(active_plugin)
-    //     }
-    // }
+    if (ptr_mode == 'mode_crosshair') {
+        // ChartJS.register(plugin_list[0])
+        const active_plugin = ChartJS.registry.plugins.get("crosshair-plugin")
+        // console.log('--- mode_crosshair. active plugins:', active_plugin)
+    } 
+    if (ptr_mode == 'mode_hover') {
+        const active_plugin = ChartJS.registry.plugins.get("crosshair-plugin")
+        // console.log("--- Hover mode, active plugins: ", active_plugin)
+        if(active_plugin) {
+            // console.log("--- Crosshair active - unregister")
+            ChartJS.unregister(active_plugin)
+        }
+    }
 
     // if(ChartJS.getChart(chartRef.current) && ChartJS.getChart(chartRef.current)._plugins._cache) {
     //     console.log("1---- chartref = ", ChartJS.getChart(chartRef.current))
