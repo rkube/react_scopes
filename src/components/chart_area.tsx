@@ -2,9 +2,8 @@
 import { useState, useRef } from "react"
 import { Grid, GridItem } from "@chakra-ui/react"
 
-import { Plugin as PluginC} from "chart.js"
-
 import MyPlot from "./mychart"
+import { Chart as ChartJS } from "chart.js"
 import { cross_hair_t, ptr_mode_t, signal_t } from "../types/all_types"
 import { cross_hair_plugin, crosshair_plugin_i } from "./cross_hair_plugin"
 
@@ -33,12 +32,13 @@ function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode:
 
     // Today I learned: Don't put this in a stateful variable. Just assemble the list
     // based on the props this component receives and pass that list to the MyPlot component
-    let plugin_list = []
-    if (ptr_mode == "mode_crosshair") {
-        plugin_list.push(new cross_hair_plugin(xtalk_ref, chart_cb))
-    } else {
-        console.log("Not crosshair")
-    }
+    let plugin_list = [new cross_hair_plugin(xtalk_ref, chart_cb)]
+    // plugin_list.push(new cross_hair_plugin(xtalk_ref, chart_cb))
+    // if (ptr_mode == "mode_crosshair") {
+    //     plugin_list.push(new cross_hair_plugin(xtalk_ref, chart_cb))
+    // } 
+
+    // ChartJS.register(new cross_hair_plugin(xtalk_ref, chart_cb))
 
 
     return (

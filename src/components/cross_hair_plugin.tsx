@@ -20,13 +20,18 @@ interface crosshair_plugin_i extends Plugin {
     events: (keyof HTMLElementEventMap)[] | undefined
     sync_ref: React.MutableRefObject<cross_hair_t>
     xtalk_cb: (new_crosshair_val: cross_hair_t) => void;
+    // install:(chart: Chart, args: event_args_i) => void;
+    // reset:(chart: Chart, args: event_args_i) => void;
+    // afterInit: (chart: Chart) => void;
+    // destroy: (chart: Chart) => void;
+    afterInit: (chart: Chart, args: any) => void;
     afterEvent: (chart: Chart, args: event_args_i, options: any) => void;
     afterDraw: (chart: Chart, args: any) => void;
 }
 
 export { type crosshair_plugin_i }
 
-// A plugin the pushes the index of the nearest point that the mouse is
+// A plugin that pushes the index of the nearest point that the mouse is
 // hovering to to the parent through a callback.
 // Relevant tutorials: https://www.youtube.com/watch?v=X0nXI9sPMgA
 class cross_hair_plugin implements crosshair_plugin_i {
@@ -37,39 +42,41 @@ class cross_hair_plugin implements crosshair_plugin_i {
     
     constructor(_sr: React.MutableRefObject<cross_hair_t>, 
             _cb: (new_crosshair_val: cross_hair_t) => void) {
-        console.log("Creating new crosshair plugin")
         this.id = "crosshair_plugin"
         this.events = ["mousemove" as keyof HTMLElementEventMap]
         this.xtalk_cb = _cb
         this.sync_ref = _sr
     }
 
-    afterEvent = (chart: Chart, args: event_args_i) => {
-        // console.log("This is after_event: ", chart)
+    afterInit = (chart: Chart, args: any) => {
+        // console.log("This if afterInit")
         const {canvas} = chart;
 
-        // this function picks up the nearest value in our plot
         function nearest_value(mousemove: MouseEvent, chart: Chart, cb: (new_crosshair_val: cross_hair_t) => void){
             // Try and find some data points
-            const points = chart.getElementsAtEventForMode(mousemove, 'nearest', 
-                {intersect: false}, true)
+            try{
+                const points = chart.getElementsAtEventForMode(mousemove, 'nearest', 
+                    {intersect: false}, true)
             // points.length will be > 0 (that is, set) when a dataset point is near the cursor position.
             if (points.length){
                 // Store x and y pixel of the datapoint we are hovering over through the callback
                 const new_crosshair_coords: cross_hair_t = {x: points[0].element.x, y: points[0].element.y} 
                 cb( new_crosshair_coords )
             }
+            } catch (error){
+                
+            }
         }
-        // If the event is inside the chart area, add an eventListener which 
-        // extracts the closest data point to the cursor position.
-        if(args.inChartArea) {
-            canvas.addEventListener('mousemove', (e) => nearest_value(e, chart, this.xtalk_cb))
-        }
+
+        canvas.addEventListener('mousemove', (e) => nearest_value(e, chart, this.xtalk_cb))
+    }
+
+    afterEvent = (chart: Chart, args: event_args_i) => {
     }
 
     afterDraw = (chart: Chart, args: any) => {
-        console.log("Calling afterDraw")
         const { ctx, chartArea: {bottom, top}, data } = chart
+        // console.log("afterDraw, ctx=", ctx)
         if(data.datasets) {
             if (this.sync_ref.current.x != undefined) {
                 ctx.beginPath()
@@ -82,6 +89,10 @@ class cross_hair_plugin implements crosshair_plugin_i {
             }
         }
     }
+
+    // destroy(chart) {
+    //     console.log("==== destroy =====")
+    // }
     
 }
 

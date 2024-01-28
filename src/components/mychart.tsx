@@ -2,13 +2,14 @@
 
 import { useRef, useEffect } from 'react';
 import { cross_hair_t, ptr_mode_t, signal_t, to_str, type_e } from '../types/all_types'
-import { Chart, ChartType, Plugin as PluginC, registerables, ChartOptions } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, ChartType, Plugin as PluginC, registerables, ChartOptions } from 'chart.js';
+import { Chart, Line } from 'react-chartjs-2';
+
+// import {Chart as ChartA} from 'chart.js/auto'
 
 import { cross_hair_plugin, crosshair_plugin_i } from './cross_hair_plugin';
 
 
-Chart.register(...registerables);
 
 const pick_color = (sig_type:type_e): string => {
     switch(sig_type) {
@@ -30,7 +31,31 @@ const pick_color = (sig_type:type_e): string => {
 const MyPlot = ({signals, plugin_list}: { signals: signal_t[], plugin_list: any[]}) => {
     // Reference to the plot in this component
     const chartRef = useRef(null)
-    console.log("plugin_list = ", plugin_list)
+
+
+
+
+    ChartJS.register(...registerables);
+
+
+    // if (plugin_list[0]) {
+    //     console.log("Registering plugin:")
+    //     ChartJS.register(plugin_list[0])
+    // }
+
+    // if(ChartJS.getChart(chartRef.current) && ChartJS.getChart(chartRef.current)._plugins._cache) {
+    //     console.log("1---- chartref = ", ChartJS.getChart(chartRef.current))
+    //     console.log("cache: ", ChartJS.getChart(chartRef.current)._plugins._cache)
+    //     console.log("plugin enabled: ", ChartJS.getChart(chartRef.current)?.isPluginEnabled("crosshair_plugin"))
+    // }
+
+    
+    // // console.log("plugin_list = ", plugin_list)
+    // if(ChartJS.getChart(chartRef.current)) {
+    //     console.log("2----- chartref = ", ChartJS.getChart(chartRef.current))
+    //     console.log("--- plugins = ", ChartJS.getChart(chartRef.current)._plugins)
+    //     // console.log("plugin enabled: ", ChartJS.getChart(chartRef.current)?.isPluginEnabled("crosshair_plugin"))
+    // }
 
 
     // Generate datasets from the signal list that are passed to the LinePlot
@@ -46,15 +71,6 @@ const MyPlot = ({signals, plugin_list}: { signals: signal_t[], plugin_list: any[
         responsive: true,
         interaction: {
             mode: 'nearest'
-        },
-        plugins: {
-            title: {
-                display: true,
-                text: ' this is the title '
-            },
-            // crosshair_plugin: {
-            //     lineColor: 'blue'
-            // }
         },
         scales: {
             x: {
@@ -85,7 +101,7 @@ const MyPlot = ({signals, plugin_list}: { signals: signal_t[], plugin_list: any[
         // Access current chart: https://github.com/reactchartjs/react-chartjs-2/issues/654#issuecomment-849418843
         if (chartRef.current) {
             console.log("e = ", e)
-            const chart = Chart.getChart(chartRef.current)
+            const chart = ChartJS.getChart(chartRef.current)
             // console.log("chart = ", chart)
             // This returns the nearest indices???
             // console.log("ge (index) = ", chart?.getElementsAtEventForMode(e, 'index', {intersect: true}))
@@ -132,14 +148,12 @@ const MyPlot = ({signals, plugin_list}: { signals: signal_t[], plugin_list: any[
         labels,
         datasets: signal_datasets
     };
-
-    console.log("ref = ", chartRef)
     
     return(
         <>
         {/* // If we want to pass plugins we can also do this like: */}
-        {/* <Line ref={chartRef} data={data} options={options} plugins={[my_crosshair_plugin]} onClick={lineplot_callback}/> */}
         <Line ref={chartRef} data={data} options={options} plugins={plugin_list} onClick={lineplot_callback}/>
+        {/* <Line ref={chartRef} data={data} options={options} onClick={lineplot_callback}/> */}
         </>
     )
 }
