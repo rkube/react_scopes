@@ -20,12 +20,11 @@ interface crosshair_plugin_i extends Plugin {
     events: (keyof HTMLElementEventMap)[] | undefined
     sync_ref: React.MutableRefObject<cross_hair_t>
     xtalk_cb: (new_crosshair_val: cross_hair_t) => void;
-    install:(chart: Chart, args: event_args_i) => void;
     start:(chart: Chart, args: event_args_i) => void;
     // reset:(chart: Chart, args: event_args_i) => void;
     // afterInit: (chart: Chart) => void;
     // destroy: (chart: Chart) => void;
-    afterInit: (chart: Chart, args: any) => void;
+    // afterInit: (chart: Chart, args: any) => void;
     afterEvent: (chart: Chart, args: event_args_i, options: any) => void;
     afterDraw: (chart: Chart, args: any) => void;
     // event handdler for mouse move
@@ -47,16 +46,11 @@ class cross_hair_plugin implements crosshair_plugin_i {
     
     constructor(_sr: React.MutableRefObject<cross_hair_t>, 
             _cb: (new_crosshair_val: cross_hair_t) => void) {
-        console.log("---------------------- Constructor--------")
         this.id = "crosshair-plugin"
         this.events = ["mousemove" as keyof HTMLElementEventMap]
         this.xtalk_cb = _cb
         this.sync_ref = _sr
         this.my_event_listener = (e: MouseEvent) => {} // Empty for now, but keep it in the code as a mental note to implement event handling correctly later!
-    }
-
-    afterInit = (chart: Chart, args: any) => {
-        console.log("+++++++++++++++++++++++++++++++++++This if afterInit")
     }
 
     start = (chart: Chart, args: any) => {
@@ -83,27 +77,9 @@ class cross_hair_plugin implements crosshair_plugin_i {
         canvas.addEventListener('mousemove', this.my_event_listener)
     }
 
-    install = (chart: Chart, args: any) => {
-        console.log("xxxxxxxxxxxxxxxxxxxxxxxx install xxxxxxxxxxxxxxxxxxxxxxxx")
-
-    }
 
     afterEvent = (chart: Chart, args: event_args_i) => {
-        console.log("AfterEvent Here")
-        // const { ctx, chartArea: {bottom, top}, data } = chart
-        // if(data.datasets) {
-        //     console.log("--- afterDraw: data.datasets = ", data.datasets)
-        //     console.log("--- current position = ", this.sync_ref.current.x)
-        //     if (this.sync_ref.current.x != undefined) {
-        //         ctx.beginPath()
-        //         ctx.lineWidth = 2
-        //         ctx.strokeStyle = 'gray'
-        //         ctx.setLineDash([6, 6])
-        //         ctx.moveTo(this.sync_ref.current.x, bottom)
-        //         ctx.lineTo(this.sync_ref.current.x, top)
-        //         ctx.stroke()
-        //     }
-        // }
+        // console.log("AfterEvent Here")
     }
 
     afterDraw = (chart: Chart, args: any) => {
