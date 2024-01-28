@@ -1,7 +1,7 @@
 //
 import { useState } from 'react'
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
-import { RadioGroup, Radio} from '@chakra-ui/react'
+import { RadioGroup, Radio, Stack} from '@chakra-ui/react'
 import './App.css'
 
 import { type_e, signal_t, to_str, cross_hair_t, ptr_mode_types, ptr_mode_t, type_string_repr } from './types/all_types'
@@ -56,6 +56,7 @@ function App() {
     setSignalList(new_signal_list)
   }
 
+  const [value, setValue] = useState<number>(1)
 
   return (
   <>
@@ -73,11 +74,14 @@ function App() {
         {/* https://stackoverflow.com/questions/55601342/using-enumerations-in-react-select */}
 
     <GridItem colSpan={2}>
-      <RadioGroup onChange={(e) => {set_ptr_mode(e as ptr_mode_t); console.log("ptr_mode = ", e)}}>
-        {ptr_mode_types.map((key) => (
-          <Radio value={key}> {key} </Radio>
-        ))}
-      </RadioGroup> 
+    <RadioGroup onChange={(e) => set_ptr_mode(e as ptr_mode_t)} value={ptr_mode}>
+      <Stack direction='row'>
+      {ptr_mode_types.map((key, ix) => ( 
+          <Radio value={key} key={ix.toString()}> {key} </Radio>
+      ))}
+      </Stack>
+    </RadioGroup>
+
       Pointer Mode: {ptr_mode}
     </GridItem>  
 

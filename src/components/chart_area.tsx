@@ -17,29 +17,20 @@ function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode:
     // This took me a while to figure out. The crosshair plugin accesses the sync_data
     // structure in afterDraw. The function associated with it only registers on
     // initialization and ignores any updates on sync_data passed as props.
-    // USing a reference to this prop ensures that the plugin always has the current
+    // Using a reference to this prop ensures that the plugin always has the current
     // data.
     // Thanks StackOverflow: https://stackoverflow.com/questions/72704153/why-function-is-not-updating-with-usecallback-in-react-and-chart-js
-    // const xtalk_ref = useRef(sync_data)
-    // xtalk_ref.current = sync_data
     xtalk_ref.current = crosshair_val
 
 
     const chart_cb = (new_crosshair_val: cross_hair_t) => {
         set_crosshair_val(new_crosshair_val)
+        console.log("set_crosshair_val: ", new_crosshair_val)
     }
-
 
     // Today I learned: Don't put this in a stateful variable. Just assemble the list
     // based on the props this component receives and pass that list to the MyPlot component
-    let plugin_list = [new cross_hair_plugin(xtalk_ref, chart_cb)]
-    // plugin_list.push(new cross_hair_plugin(xtalk_ref, chart_cb))
-    // if (ptr_mode == "mode_crosshair") {
-    //     plugin_list.push(new cross_hair_plugin(xtalk_ref, chart_cb))
-    // } 
-
-    // ChartJS.register(new cross_hair_plugin(xtalk_ref, chart_cb))
-
+    const plugin_list = [new cross_hair_plugin(xtalk_ref, chart_cb)]
 
     return (
         <>
@@ -55,11 +46,11 @@ function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode:
             fontWeight='bold'
         >
             <GridItem pl='2' bg='blue.50'>
-                <MyPlot signals={signal_list} plugin_list={plugin_list} />
+                <MyPlot signals={signal_list} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
             </GridItem>
 
             <GridItem pl='2' bg='yellow.50'>
-                <MyPlot signals={signal_list} plugin_list={plugin_list} />
+                <MyPlot signals={signal_list} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
             </GridItem>
 
 

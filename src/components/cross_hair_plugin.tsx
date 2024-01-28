@@ -27,6 +27,9 @@ interface crosshair_plugin_i extends Plugin {
     afterInit: (chart: Chart, args: any) => void;
     afterEvent: (chart: Chart, args: event_args_i, options: any) => void;
     afterDraw: (chart: Chart, args: any) => void;
+    // event handdler for mouse move
+    // nearest_value: (mousemove: MouseEvent, chart: Chart, cb: (new_crosshair_val: cross_hair_t) => void) => void
+    my_event_listener: (e: MouseEvent) => void;
 }
 
 export { type crosshair_plugin_i }
@@ -39,13 +42,15 @@ class cross_hair_plugin implements crosshair_plugin_i {
     events: (keyof HTMLElementEventMap)[];
     sync_ref: React.MutableRefObject<cross_hair_t>;
     xtalk_cb: (new_crosshair_val: cross_hair_t) => void;
+    my_event_listener: (e: MouseEvent) => void;
     
     constructor(_sr: React.MutableRefObject<cross_hair_t>, 
             _cb: (new_crosshair_val: cross_hair_t) => void) {
-        this.id = "crosshair_plugin"
+        this.id = "crosshair-plugin"
         this.events = ["mousemove" as keyof HTMLElementEventMap]
         this.xtalk_cb = _cb
         this.sync_ref = _sr
+        this.my_event_listener = (e: MouseEvent) => {} // Empty for now, but keep it in the code as a mental note to implement event handling correctly later!
     }
 
     afterInit = (chart: Chart, args: any) => {
@@ -67,8 +72,8 @@ class cross_hair_plugin implements crosshair_plugin_i {
                 
             }
         }
-
         canvas.addEventListener('mousemove', (e) => nearest_value(e, chart, this.xtalk_cb))
+        canvas.addEventListener('mousemove', this.my_event_listener)
     }
 
     afterEvent = (chart: Chart, args: event_args_i) => {
@@ -76,7 +81,7 @@ class cross_hair_plugin implements crosshair_plugin_i {
 
     afterDraw = (chart: Chart, args: any) => {
         const { ctx, chartArea: {bottom, top}, data } = chart
-        // console.log("afterDraw, ctx=", ctx)
+        // console.log("afterDraw, ctx=")
         if(data.datasets) {
             if (this.sync_ref.current.x != undefined) {
                 ctx.beginPath()
@@ -90,9 +95,14 @@ class cross_hair_plugin implements crosshair_plugin_i {
         }
     }
 
-    // destroy(chart) {
-    //     console.log("==== destroy =====")
-    // }
+    destroy(chart: Chart) {
+        // ToDo: This should remove the event listener.
+        console.log("destroy here")
+        const { canvas } = chart;
+
+        // canvas.removeEventListener('mousemove', (e) => nearest_value(e, chart, this.xtalk_cb))
+        canvas.removeEventListener('mousemove', this.my_event_listener)
+    }
     
 }
 
