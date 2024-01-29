@@ -1,11 +1,11 @@
 
 import { useState, useRef } from "react"
 import { Grid, GridItem } from "@chakra-ui/react"
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 
 import MyPlot from "./mychart"
-import { Chart as ChartJS } from "chart.js"
 import { cross_hair_t, ptr_mode_t, signal_t } from "../types/all_types"
-import { cross_hair_plugin, crosshair_plugin_i } from "./cross_hair_plugin"
+import { cross_hair_plugin } from "./cross_hair_plugin"
 
 //
 
@@ -34,9 +34,6 @@ function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode:
 
     return (
         <>
-        <div>
-            Drawing cross-hair at {crosshair_val.x} - {crosshair_val.y}
-        </div>
 
         <Grid
             templateRows={'200px 1fr'}
@@ -45,12 +42,36 @@ function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode:
             gap='10'
             fontWeight='bold'
         >
-            <GridItem pl='2' bg='blue.50'>
-                <MyPlot signals={signal_list} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
+            <GridItem pl='2'>
+                <Tabs>
+                    <TabList>
+                        <Tab> Plot </Tab>
+                        <Tab> Settings </Tab>
+                    </TabList>
+                    <TabPanels>
+                        <TabPanel>
+                            <MyPlot signals={signal_list} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
+                        </TabPanel>
+                        <TabPanel> Settings here </TabPanel>
+                    </TabPanels>
+
+                </Tabs>
             </GridItem>
 
-            <GridItem pl='2' bg='yellow.50'>
-                <MyPlot signals={signal_list} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
+            <GridItem pl='2'>
+                <Tabs>
+                    <TabList>
+                        <Tab> Plot </Tab>
+                        <Tab> Settings </Tab>
+                    </TabList>
+                    <TabPanels>
+                        <TabPanel>
+                            <MyPlot signals={signal_list} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
+                        </TabPanel>
+                        <TabPanel> Settings here </TabPanel>
+                    </TabPanels>
+
+                </Tabs>
             </GridItem>
 
 
