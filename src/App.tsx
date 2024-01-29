@@ -4,10 +4,12 @@ import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
 import { RadioGroup, Radio, Stack} from '@chakra-ui/react'
 import './App.css'
 
-import { type_e, signal_t, to_str, cross_hair_t, ptr_mode_types, ptr_mode_t, type_string_repr } from './types/all_types'
-import MyList from './components/list'
-import Selector from './components/selector'
-// import MyPlot from './components/mychart'
+import { DndContext } from '@dnd-kit/core'
+
+
+import { type_e, signal_t, ptr_mode_types, ptr_mode_t, type_string_repr } from './types/all_types'
+import { MyList } from './components/list'
+import { Selector } from './components/selector'
 import { ScopesGrid } from './components/chart_area'
 
 
@@ -25,6 +27,9 @@ function App() {
 
   const [signalList, setSignalList] = useState<signal_t[]>(init_state)
   const [ptr_mode, set_ptr_mode] = useState<ptr_mode_t>("mode_hover")
+
+  // Drag and Drop
+  const [isDropped, setIsDropped] = useState(false);
 
   // This is a callback to selector. The function passes 
   // the currently selected type and shot number up.
@@ -56,9 +61,17 @@ function App() {
     setSignalList(new_signal_list)
   }
 
+  function handleDragEnd(event: any) {
+    if (event.over && event.over.id === 'droppable') {
+      setIsDropped(true);
+      console.log("Dropped!")
+    }
+  }
+
   return (
   <>
     <ChakraProvider>
+      <DndContext onDragEnd={handleDragEnd}>
 
     <Grid
       templateRows={'200px 1fr'}
@@ -71,35 +84,32 @@ function App() {
 
         {/* https://stackoverflow.com/questions/55601342/using-enumerations-in-react-select */}
 
-    <GridItem colSpan={2}>
-    <RadioGroup onChange={(e) => set_ptr_mode(e as ptr_mode_t)} value={ptr_mode}>
-      <Stack direction='row'>
-      {ptr_mode_types.map((key, ix) => ( 
-          <Radio value={key} key={ix.toString()}> {key} </Radio>
-      ))}
-      </Stack>
-    </RadioGroup>
+      <GridItem colSpan={2}>
+        <RadioGroup onChange={(e) => set_ptr_mode(e as ptr_mode_t)} value={ptr_mode}>
+          <Stack direction='row'>
+          {ptr_mode_types.map((key, ix) => ( 
+              <Radio value={key} key={ix.toString()}> {key} </Radio>
+          ))}
+          </Stack>
+        </RadioGroup>
 
-      Pointer Mode: {ptr_mode}
-    </GridItem>  
+      </GridItem>  
 
-  <GridItem pl='2' bg='gray.300'>
-    <Selector onClick={handleNewSignal} />
-    <MyList signal_list={signalList} 
-            render={(item: signal_t): string => {return(`${item.shot.toString()}  ${type_string_repr[item.type]}`)}}
-            cb={remove_signal_cb} />
-  </GridItem>
+      <GridItem pl='2' bg='gray.300'>
+        <Selector onClick={handleNewSignal} />
+        <MyList signal_list={signalList} 
+                render={(item: signal_t): string => {return(`${item.shot.toString()}  ${type_string_repr[item.type]}`)}}
+                cb={remove_signal_cb} />
+      </GridItem>
 
-  <GridItem pl='2'>
-  <ScopesGrid signal_list={signalList} ptr_mode={ptr_mode} />
-  </GridItem>
+      <GridItem pl='2'>
+        <ScopesGrid signal_list={signalList} ptr_mode={ptr_mode} />
+      </GridItem>
+    </Grid>
 
-</Grid>
-
-
-
-      </ChakraProvider>
-      </>
+      </DndContext>
+    </ChakraProvider>
+  </>
   )
 }
 

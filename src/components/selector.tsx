@@ -74,4 +74,4 @@ const Selector = (props) => {
   )
 }
 
-export default Selector
+export { Selector }

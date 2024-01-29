@@ -1,15 +1,9 @@
 // Diong plotting stuff
 
-import { useRef, useEffect } from 'react';
-import { cross_hair_t, ptr_mode_t, signal_t, to_str, type_e } from '../types/all_types'
+import { useRef } from 'react';
+import { ptr_mode_t, signal_t, to_str, type_e } from '../types/all_types'
 import { Chart as ChartJS, ChartType, Plugin as PluginC, registerables, ChartOptions } from 'chart.js';
-import { Chart, Line } from 'react-chartjs-2';
-
-// import {Chart as ChartA} from 'chart.js/auto'
-
-import { cross_hair_plugin, crosshair_plugin_i } from './cross_hair_plugin';
-
-
+import { Line } from 'react-chartjs-2';
 
 const pick_color = (sig_type:type_e): string => {
     switch(sig_type) {
@@ -52,23 +46,6 @@ const MyPlot = ({signals, plugin_list, ptr_mode}: { signals: signal_t[], plugin_
             ChartJS.unregister(active_plugin)
         }
     }
-
-    // if(ChartJS.getChart(chartRef.current) && ChartJS.getChart(chartRef.current)._plugins._cache) {
-    //     console.log("1---- chartref = ", ChartJS.getChart(chartRef.current))
-    //     console.log("cache: ", ChartJS.getChart(chartRef.current)._plugins._cache)
-    //     console.log("plugin enabled: ", ChartJS.getChart(chartRef.current)?.isPluginEnabled("crosshair_plugin"))
-    // }
-
-    
-    // // console.log("plugin_list = ", plugin_list)
-    // if(ChartJS.getChart(chartRef.current)) {
-    //     console.log("2----- chartref = ", ChartJS.getChart(chartRef.current))
-    //     console.log("--- plugins = ", ChartJS.getChart(chartRef.current)._plugins)
-    //     // console.log("plugin enabled: ", ChartJS.getChart(chartRef.current)?.isPluginEnabled("crosshair_plugin"))
-    // }
-
-    // ChartJS.getChart(chartRef.current).plugins
-
 
     // Generate datasets from the signal list that are passed to the LinePlot
     const signal_datasets = signals.map((sig) => { return{
@@ -165,8 +142,6 @@ const MyPlot = ({signals, plugin_list, ptr_mode}: { signals: signal_t[], plugin_
     
     return(
         <>
-        {/* // If we want to pass plugins we can also do this like: */}
-        {/* <Line ref={chartRef} data={data} options={options} plugins={plugin_list} onClick={lineplot_callback}/> */}
         <Line ref={chartRef} data={data} options={options} onClick={lineplot_callback}/>
         </>
     )

@@ -4,10 +4,11 @@ import { Grid, GridItem } from "@chakra-ui/react"
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 
 import MyPlot from "./mychart"
+import { Droppable } from './droppable';
+
 import { cross_hair_t, ptr_mode_t, signal_t } from "../types/all_types"
 import { cross_hair_plugin } from "./cross_hair_plugin"
 
-//
 
 function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode: ptr_mode_t}) {
 
@@ -34,6 +35,9 @@ function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode:
 
     return (
         <>
+        <div>
+            This is Scopes Grid
+        </div>
 
         <Grid
             templateRows={'200px 1fr'}
@@ -43,15 +47,22 @@ function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode:
             fontWeight='bold'
         >
             <GridItem pl='2'>
+
                 <Tabs>
+                    
                     <TabList>
                         <Tab> Plot </Tab>
+                        <Tab> Signals </Tab>
                         <Tab> Settings </Tab>
                     </TabList>
                     <TabPanels>
                         <TabPanel>
+                            <Droppable>
+                                TabPanel
                             <MyPlot signals={signal_list} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
+                            </Droppable>
                         </TabPanel>
+                        <TabPanel> Signals </TabPanel>
                         <TabPanel> Settings here </TabPanel>
                     </TabPanels>
 
@@ -59,19 +70,28 @@ function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode:
             </GridItem>
 
             <GridItem pl='2'>
+                
+
                 <Tabs>
                     <TabList>
                         <Tab> Plot </Tab>
+                        <Tab> Signals </Tab>
                         <Tab> Settings </Tab>
                     </TabList>
                     <TabPanels>
                         <TabPanel>
+                            <Droppable>
+                                TabPanel
                             <MyPlot signals={signal_list} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
+                            </Droppable>
+
                         </TabPanel>
+                        <TabPanel> Signals </TabPanel>
                         <TabPanel> Settings here </TabPanel>
                     </TabPanels>
 
                 </Tabs>
+
             </GridItem>
 
 
