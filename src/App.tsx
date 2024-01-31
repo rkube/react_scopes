@@ -4,7 +4,7 @@ import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
 import { RadioGroup, Radio, Stack} from '@chakra-ui/react'
 import './App.css'
 
-import { DndContext } from '@dnd-kit/core'
+import { DndContext, rectIntersection } from '@dnd-kit/core'
 
 
 import { type_e, signal_t, ptr_mode_types, ptr_mode_t, type_string_repr } from './types/all_types'
@@ -57,11 +57,13 @@ function App() {
   // Arguments:
   // ix (number) - The index of the signal that needs to be removed
   const remove_signal_cb = (ix: number) => {
+    console.log("remove_signal_cb")
     const new_signal_list = signalList.filter((item) => item.index != ix)
     setSignalList(new_signal_list)
   }
 
   function handleDragEnd(event: any) {
+    console.log("handleDragEnd here")
     if (event.over && event.over.id === 'droppable') {
       setIsDropped(true);
       console.log("Dropped!")
@@ -70,8 +72,10 @@ function App() {
 
   return (
   <>
+      <DndContext 
+        collisionDetection={rectIntersection}
+        onDragEnd={handleDragEnd}>
     <ChakraProvider>
-      <DndContext onDragEnd={handleDragEnd}>
 
     <Grid
       templateRows={'200px 1fr'}
@@ -98,7 +102,6 @@ function App() {
       <GridItem pl='2' bg='gray.300'>
         <Selector onClick={handleNewSignal} />
         <MyList signal_list={signalList} 
-                render={(item: signal_t): string => {return(`${item.shot.toString()}  ${type_string_repr[item.type]}`)}}
                 cb={remove_signal_cb} />
       </GridItem>
 
@@ -106,9 +109,9 @@ function App() {
         <ScopesGrid signal_list={signalList} ptr_mode={ptr_mode} />
       </GridItem>
     </Grid>
-
-      </DndContext>
     </ChakraProvider>
+
+  </DndContext>
   </>
   )
 }

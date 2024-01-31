@@ -20,7 +20,7 @@ type signal_t = {
     shot: number,
     type: type_e,
     samples: number[],
-    timebase: number[]
+    timebase: number[],
 }
 
 // String representation of a signal_t
