@@ -9,7 +9,21 @@ import { cross_hair_plugin } from "./cross_hair_plugin"
 
 import { DroppableArea } from "./droppable_area"
 
-function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode: ptr_mode_t}) {
+interface ScopesGrid_i {
+    signal_lists: signal_t[][]
+    ptr_mode: ptr_mode_t
+}
+
+
+// function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode: ptr_mode_t}) {
+function ScopesGrid({signal_lists, ptr_mode}: ScopesGrid_i) {
+
+    // Destructure signal_lists
+    const signal_list_1 = signal_lists[0]
+    const signal_list_2 = signal_lists[1]
+
+    console.log("signal_list_1 = ", signal_list_1)
+    console.log("signal_list_2 = ", signal_list_2)
 
     // Value for the crosshair plugin, which needs to by synced across the scopes
     const [crosshair_val, set_crosshair_val] = useState<cross_hair_t>({x: 216, y: 2})
@@ -21,9 +35,6 @@ function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode:
     // data.
     // Thanks StackOverflow: https://stackoverflow.com/questions/72704153/why-function-is-not-updating-with-usecallback-in-react-and-chart-js
     xtalk_ref.current = crosshair_val
-
-    // const {setNodeRef} = useDroppable({id: title})
-
 
     const chart_cb = (new_crosshair_val: cross_hair_t) => {
         set_crosshair_val(new_crosshair_val)
@@ -59,10 +70,10 @@ function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode:
                     <TabPanels>
                         <TabPanel>
                                 TabPanel
-                            <MyPlot signals={signal_list} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
+                            <MyPlot signals={signal_list_1} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
                         </TabPanel>
                         <TabPanel> Signals 
-                            <DroppableArea title="area1" signal_list={[]} />
+                            <DroppableArea title="area1" signal_list={signal_list_1} />
                         {/* <UnorderedList>
                             {signal_list.map((item, ix) => (
                                 <ListItem key={ix}> {to_str(item)} </ListItem>
@@ -88,10 +99,11 @@ function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode:
                     <TabPanels>
                         <TabPanel>
                                 TabPanel
-                            <MyPlot signals={signal_list} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
+                            <MyPlot signals={signal_list_2} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
 
                         </TabPanel>
                         <TabPanel> Signals 
+                            <DroppableArea title="area2" signal_list={signal_list_2} />
                          {/* <UnorderedList>
                             {signal_list.map((item, ix) => (
                                 <ListItem key={ix}> {to_str(item)} </ListItem>

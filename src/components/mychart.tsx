@@ -1,19 +1,19 @@
 // Diong plotting stuff
 
 import { useRef } from 'react';
-import { ptr_mode_t, signal_t, to_str, type_e } from '../types/all_types'
+import { ptr_mode_t, signal_t, to_str, type_t } from '../types/all_types'
 import { Chart as ChartJS, ChartType, Plugin as PluginC, registerables, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
-const pick_color = (sig_type:type_e): string => {
+const pick_color = (sig_type:type_t): string => {
     switch(sig_type) {
-        case type_e.Type1:
+        case "Type1":
             return 'rgb(127, 201, 127)'
             break
-        case type_e.Type2:
+        case "Type2":
             return 'rgb(190, 174, 211)'
             break
-        case type_e.Type3:
+        case "Type3":
             return 'rgb(253, 192, 134)'
             break
         default:

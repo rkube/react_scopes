@@ -3,32 +3,33 @@
  * Types for signal representation
  * 
  ****************************************************************************/
-// A signal must be of a specific type. Enumerate these types here:
-enum type_e {Type1, Type2, Type3}
+// Signals are of these specific types. List the possible values here
+// See https://danielbarta.com/literal-iteration-typescript/
+export const signal_types = ["Type1", "Type2", "Type3"] as const
+type type_t = typeof signal_types[number]
 
-
-// String representation of the Types in the enum dict
-const type_string_repr: enum_dict<type_e, string> = {
-    [type_e.Type1]: "Type_1",
-    [type_e.Type2]: "Type_2",
-    [type_e.Type3]: "Type_3",
-}
 
 // Defines a signal along with some metadata
 type signal_t = {
-    index: number,
-    shot: number,
-    type: type_e,
+    index: number,  // index will be replaced by id
+    id: string,     // used to uniquely identify a signal in lists etc.
+    shot: number,   
+    type: type_t,
     samples: number[],
     timebase: number[],
 }
 
-// String representation of a signal_t
-const to_str = (it: signal_t) => {
-    return(it.shot.toString() + " " + type_string_repr[it.type])
+// Build id from a signal
+const to_id = (shot: number, type: string): string => {
+    return(`${shot}_${type}`)
 }
 
-export {type_e, type signal_t, type_string_repr, to_str}
+// String representation of a signal_t
+const to_str = (sig: signal_t) => {
+    return(`${sig.shot.toString()} - ${sig.type}`)
+}
+
+export {type type_t, type signal_t, to_str, to_id}
 
 /*************************************************************************** 
  * 
