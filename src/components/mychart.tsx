@@ -5,15 +5,19 @@ import { ptr_mode_t, signal_t, to_str, type_t } from '../types/all_types'
 import { Chart as ChartJS, ChartType, Plugin as PluginC, registerables, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
-const pick_color = (sig_type:type_t): string => {
+const pick_color = (sig_type: type_t): string => {
+    console.log("pick_color sig_Type = ", sig_type)
     switch(sig_type) {
         case "Type1":
+            console.log("Picking color - Type 1")
             return 'rgb(127, 201, 127)'
             break
         case "Type2":
+            console.log("Picking color - Type 2")
             return 'rgb(190, 174, 211)'
             break
         case "Type3":
+            console.log("Picking color - Type 3")
             return 'rgb(253, 192, 134)'
             break
         default:
@@ -22,27 +26,30 @@ const pick_color = (sig_type:type_t): string => {
 }
 
 
-const MyPlot = ({signals, plugin_list, ptr_mode}: { signals: signal_t[], plugin_list: any[], ptr_mode:ptr_mode_t}) => {
+
+interface my_plot_i {
+    signals: signal_t[],
+    plugin_list: any[],
+    ptr_mode: ptr_mode_t
+}
+
+const MyPlot = ({signals, plugin_list, ptr_mode}: my_plot_i ) => {
     // Reference to the plot in this component
     const chartRef = useRef(null)
 
     ChartJS.register(...registerables);
-
 
     console.log('MyPlot: ptr_mode = ', ptr_mode)
     ChartJS.register(plugin_list[0])
 
     // // If we want to register a plugin, do it here.
     if (ptr_mode == 'mode_crosshair') {
-        // ChartJS.register(plugin_list[0])
-        const active_plugin = ChartJS.registry.plugins.get("crosshair-plugin")
-        // console.log('--- mode_crosshair. active plugins:', active_plugin)
+        // Do nothing, the crosshair plugin the plugin has already been registered
     } 
     if (ptr_mode == 'mode_hover') {
+        // Unreggister the crosshair plugin if it is registered
         const active_plugin = ChartJS.registry.plugins.get("crosshair-plugin")
-        // console.log("--- Hover mode, active plugins: ", active_plugin)
         if(active_plugin) {
-            // console.log("--- Crosshair active - unregister")
             ChartJS.unregister(active_plugin)
         }
     }
@@ -82,10 +89,12 @@ const MyPlot = ({signals, plugin_list, ptr_mode}: { signals: signal_t[], plugin_
     const labels = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0];
 
     // An on-click callback 
+    // Arguments:
+    // e: any - since I can't figure out the type
     // Inspired by this: https://stackoverflow.com/questions/50515985/get-ylabel-value-onclick-chart-js
     // Relevant docs: https://www.chartjs.org/docs/latest/migration/v3-migration.html#removal-of-public-apis
     // Relevant tutorials: https://www.youtube.com/watch?v=Cf5Vyt8nSDo
-    const lineplot_callback = (e) => {
+    const lineplot_callback = (e: any) => {
         console.log("======== lineplot callback ==========")
         // Access current chart: https://github.com/reactchartjs/react-chartjs-2/issues/654#issuecomment-849418843
         if (chartRef.current) {
@@ -101,10 +110,10 @@ const MyPlot = ({signals, plugin_list, ptr_mode}: { signals: signal_t[], plugin_
             // This returns the closest dataset
             // console.log("ge (dataset) = ", chart?.getElementsAtEventForMode(e, 'dataset', {intersect: false}))
 
-            const ge_value = chart?.getElementsAtEventForMode(e, 'nearest', {intersect: true})
+            const ge_value = chart?.getElementsAtEventForMode(e, 'nearest', {intersect: true}, true)
 
             // If we clicked on a point, extract the index of the dataset and the index within that dataset
-            if (ge_value[0] !== undefined) {
+            if ((ge_value) && (ge_value[0] !== undefined)) {
                 const ix_dataset = ge_value[0].datasetIndex 
                 const ix_signal = ge_value[0].index
                 console.log("ix_dataset = ", ix_dataset, ", ix_Signal = ", ix_signal)

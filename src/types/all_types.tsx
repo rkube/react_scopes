@@ -68,10 +68,3 @@ type chart_sync_t = {
 }
 
 export { type cross_hair_t, type chart_sync_t }
-
-
-// Definition for dictionary with enum key
-type enum_dict<T extends string | symbol | number, U> = {
-    [K in T]: U;
-};
-

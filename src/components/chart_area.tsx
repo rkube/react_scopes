@@ -47,10 +47,6 @@ function ScopesGrid({signal_lists, ptr_mode}: ScopesGrid_i) {
 
     return (
         <>
-        <div>
-            This is Scopes Grid
-        </div>
-
         <Grid
             templateRows={'200px 1fr'}
             templateColumns={'1fr 1fr'}

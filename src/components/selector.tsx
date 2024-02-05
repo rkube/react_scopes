@@ -1,59 +1,51 @@
 // Select things to put in our list
 
-import { useCallback, useEffect, useState, MouseEvent, KeyboardEvent } from 'react'
-import { Button, NumberInput, NumberInputField, Select, Stack } from '@chakra-ui/react'
+import { useState, MouseEvent, KeyboardEvent } from 'react'
+import { Button, NumberInput, NumberInputField, Select, VStack } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 
-import { type_t } from '../types/all_types'
+import { type_t, signal_types } from '../types/all_types'
 
 
-const Selector = (props) => {
+interface selector_i {
+  add_button_cb: (new_type: type_t, new_shot: number) => void
+}
+
+const Selector = ({add_button_cb} : selector_i) => {
+
+  console.log("Selector: add_button_cb = ", add_button_cb)
 
   const [shot, setShot] = useState<number | undefined >(undefined);
-  const [selectedType, setSelectedType] = useState<type_t>("Type2")
+  const [selectedType, setSelectedType] = useState<type_t>("Type1")
 
 
   // Update selectedType from select menu:
   const update_type = (e: React.FormEvent<HTMLSelectElement>) => {
-    console.log(e.currentTarget.value);
-    switch(e.currentTarget.value) {
-      case "Type 1":
-        setSelectedType("Type1")
-        break
-      case "Type 2":
-        setSelectedType("Type2")
-        break
-      case "Type 3":
-        setSelectedType("Type3")
-        break
-      default:
-        console.log("This should not happen: selected_ix: ", e.currentTarget.value)
-        break;
-    }
+    console.log("update_type, type = ", e.currentTarget.value);
+    setSelectedType(e.currentTarget.value as type_t)
   }
 
   // Callback for the add data button
   const add_signal = (e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>) => {
     // Check if shot is undefined.
     if (shot !== undefined) {
-      props.onClick(selectedType, shot)
+      add_button_cb(selectedType, shot)
     }
   }
 
 
   return(
     <div>
-      <Stack spacing={10} direction='row'>
-      <Select onChange={update_type}>
-        <option value="Type 1">Type 1</option>
-        <option value="Type 2">Type 2</option>
-        <option value="Type 3">Type 3</option>
-      </Select>
-        <NumberInput>
-          <NumberInputField  onChange={(e) => {setShot(Number(e.target.value))}}/>
+        <NumberInput colorScheme='teal' borderColor='black'>
+          <NumberInputField onChange={(e) => {setShot(Number(e.target.value))}}/>
         </NumberInput>
-        <Button onClick={(e) => {add_signal(e)}}><AddIcon /></Button>
-      </Stack>
+        <Select borderColor='black' onChange={update_type} colorScheme='teal'>
+        {signal_types.map((item, ix) => (
+          <option value={item} key={ix}> {item} </option>
+        ))}
+      </Select>
+        <Button onClick={(e) => {add_signal(e)}} colorScheme='teal'><AddIcon /></Button>
+      
     </div>
   )
 }

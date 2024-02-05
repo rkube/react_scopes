@@ -1,11 +1,11 @@
 //
 import { useState } from 'react'
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
-import { RadioGroup, Radio, Stack} from '@chakra-ui/react'
+import { Center, Divider } from '@chakra-ui/react'
+import { Button, RadioGroup, Radio, Stack, VStack} from '@chakra-ui/react'
 import './App.css'
 
 import { DndContext, rectIntersection } from '@dnd-kit/core'
-
 
 import { type_t, signal_t, ptr_mode_types, ptr_mode_t, to_id } from './types/all_types'
 import { MyList } from './components/list'
@@ -105,10 +105,11 @@ function App() {
       <ChakraProvider>
 
     <Grid
-      templateRows={'200px 1fr'}
-      templateColumns={'0.2fr 2fr'}
+      templateRows={'50px 1fr'}
+      templateColumns={'0.5fr 2fr'}
       h='500px'
       gap='4'
+      alignItems='stretch'
       // color='blackAlpha.700'
       fontWeight='bold'
     >
@@ -123,11 +124,16 @@ function App() {
           ))}
           </Stack>
         </RadioGroup>
-
       </GridItem>  
+      <GridItem colSpan={2}>
+      <Divider borderColor={'blackAlpha'} size='lg' />
+      </GridItem>
 
-      <GridItem pl='2' bg='gray.300'>
-        <Selector onClick={handleNewSignal} />
+      <GridItem pl='2' >
+
+        <Selector add_button_cb={handleNewSignal} />
+
+        <Divider borderColor={'blackAlpha'}  size='xl'  />
         <MyList signal_list={signal_list} 
                 cb={remove_signal_cb} />
       </GridItem>
