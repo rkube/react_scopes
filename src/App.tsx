@@ -1,7 +1,8 @@
 //
 import { useState } from 'react'
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
-import { Center, Divider } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
+import { Divider } from '@chakra-ui/react'
 import { Button, RadioGroup, Radio, Stack, VStack} from '@chakra-ui/react'
 import './App.css'
 
@@ -104,19 +105,10 @@ function App() {
         onDragEnd={handleDragEnd}>
       <ChakraProvider>
 
-    <Grid
-      templateRows={'50px 1fr'}
-      templateColumns={'0.5fr 2fr'}
-      h='500px'
-      gap='4'
-      alignItems='stretch'
-      // color='blackAlpha.700'
-      fontWeight='bold'
-    >
+
 
         {/* https://stackoverflow.com/questions/55601342/using-enumerations-in-react-select */}
-
-      <GridItem colSpan={2}>
+        <Box alignItems="center" justifyContent="center" height="50px" border="dashed red 1px">
         <RadioGroup onChange={(e) => set_ptr_mode(e as ptr_mode_t)} value={ptr_mode}>
           <Stack direction='row'>
           {ptr_mode_types.map((key, ix) => ( 
@@ -124,12 +116,19 @@ function App() {
           ))}
           </Stack>
         </RadioGroup>
-      </GridItem>  
-      <GridItem colSpan={2}>
+        </Box>
       <Divider borderColor={'blackAlpha'} size='lg' />
-      </GridItem>
 
-      <GridItem pl='2' >
+      <Grid
+        templateRows={'50px 1fr'}
+        templateColumns={'1fr 4fr'}
+        h='500px'
+        alignItems='stretch'
+        // color='blackAlpha.700'
+        fontWeight='bold'
+      >
+
+      <GridItem >
 
         <Selector add_button_cb={handleNewSignal} />
 
@@ -138,7 +137,7 @@ function App() {
                 cb={remove_signal_cb} />
       </GridItem>
 
-      <GridItem pl='2'>
+      <GridItem>
         <ScopesGrid signal_lists={[signal_list_1, signal_list_2]} ptr_mode={ptr_mode} />
       </GridItem>
     </Grid>

@@ -1,7 +1,8 @@
 // Select things to put in our list
 
 import { useState, MouseEvent, KeyboardEvent } from 'react'
-import { Button, NumberInput, NumberInputField, Select, VStack } from '@chakra-ui/react'
+import { Button, NumberInput, NumberInputField, Select } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 
 import { type_t, signal_types } from '../types/all_types'
@@ -34,8 +35,8 @@ const Selector = ({add_button_cb} : selector_i) => {
   }
 
 
-  return(
-    <div>
+  return (
+    <Box border="dashed red 1px" padding="1em">
         <NumberInput colorScheme='teal' borderColor='black'>
           <NumberInputField onChange={(e) => {setShot(Number(e.target.value))}}/>
         </NumberInput>
@@ -44,9 +45,9 @@ const Selector = ({add_button_cb} : selector_i) => {
           <option value={item} key={ix}> {item} </option>
         ))}
       </Select>
-        <Button onClick={(e) => {add_signal(e)}} colorScheme='teal'><AddIcon /></Button>
+        <Button width="100%" onClick={(e) => {add_signal(e)}} colorScheme='teal'><AddIcon /></Button>
       
-    </div>
+    </Box>
   )
 }
 

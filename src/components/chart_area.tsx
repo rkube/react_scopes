@@ -1,7 +1,7 @@
 
 import { useState, useRef } from "react"
 import { Grid, GridItem, ListItem, UnorderedList } from "@chakra-ui/react"
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+import { Box, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 
 import MyPlot from "./mychart"
 import { cross_hair_t, ptr_mode_t, signal_t } from "../types/all_types"
@@ -46,16 +46,9 @@ function ScopesGrid({signal_lists, ptr_mode}: ScopesGrid_i) {
     const plugin_list = [new cross_hair_plugin(xtalk_ref, chart_cb)]
 
     return (
-        <>
-        <Grid
-            templateRows={'200px 1fr'}
-            templateColumns={'1fr 1fr'}
-            h='800px'
-            gap='10'
-            fontWeight='bold'
-        >
-            <GridItem pl='2'>
-                
+        <Grid templateColumns={'1fr 1fr'}>
+            <GridItem>
+                <Box border="1px red dashed">
                 <Tabs>
                     
                     <TabList>
@@ -81,11 +74,12 @@ function ScopesGrid({signal_lists, ptr_mode}: ScopesGrid_i) {
                     </TabPanels>
 
                 </Tabs>
+                </Box>
             </GridItem>
 
-            <GridItem pl='2'>
+            <GridItem>
                 
-
+                <Box border="1px red dashed">
                 <Tabs>
                     <TabList>
                         <Tab> Plot </Tab>
@@ -110,12 +104,10 @@ function ScopesGrid({signal_lists, ptr_mode}: ScopesGrid_i) {
                     </TabPanels>
 
                 </Tabs>
+                </Box>
 
             </GridItem>
-
-
-        </Grid>
-        </>
+            </Grid>
     )
 }
 

@@ -1,8 +1,7 @@
 
 import { Fragment } from 'react'
 
-import { SimpleGrid } from '@chakra-ui/react'
-
+import { Box } from '@chakra-ui/react'
 
 import { signal_t } from '../types/all_types'
 
@@ -20,13 +19,13 @@ const MyList = ({ signal_list, cb }: signal_list_i) => {
     const parent_name = "MyList"
     signal_list.map((item, ix) => console.log("item = ", item, ", ix = ", ix))
     return (
-        <SimpleGrid gap={4} px={12} columns={1}>
+        <Box>
         {signal_list.map((item, ix) => (
             <Fragment key={ix}>
             <SignalCard signal={item} ix={ix} parent={parent_name} cb={cb} />
             </Fragment>
         ))}
-        </SimpleGrid>
+        </Box>
     )
 }
 

@@ -35,7 +35,7 @@ const SignalCard = ({signal, ix, parent, cb}: signal_card_i) => {
       };
 
       return ( 
-        <div>
+        <Box border="dashed red 1px" width="100%">
         <Center>
           <Flex>
           <VStack>
@@ -56,7 +56,7 @@ const SignalCard = ({signal, ix, parent, cb}: signal_card_i) => {
         </Flex>
         </Center>
 
-        </div>
+        </Box>
       )
 }
 
