@@ -1,5 +1,7 @@
 // droppable_area.tsx
-import { Flex, List, ListItem, Text } from "@chakra-ui/react";
+import { Flex, List, Text } from "@chakra-ui/react";
+
+import { Accordion, AccordionItem } from "@chakra-ui/react";
 import { useDroppable } from "@dnd-kit/core";
 
 import { SignalInfoCard } from "./signal_info_card";
@@ -33,11 +35,13 @@ function DroppableArea({ title, signal_list }: droppable_props) {
         padding="2"
         flexDirection="column"
       >
-        <List>
+        <Accordion allowMultiple>
         {signal_list.map((item, ix) => (
-            <SignalInfoCard signal={item} ix={ix} />
+          <AccordionItem key={ix}>
+            <SignalInfoCard signal={item}  />
+            </AccordionItem>
         ))}
-        </List>
+        </Accordion>
       </Flex>
     </Flex>
   );

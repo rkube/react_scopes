@@ -33,6 +33,23 @@ export {type type_t, type signal_t, to_str, to_id}
 
 /*************************************************************************** 
  * 
+ * Things that configure signal display
+ * 
+ ****************************************************************************/
+
+type signal_display_t = {
+    scaling: (val: number) => number;
+    color: string;
+    line_style: string;
+    thickness: number;
+}
+
+export { type signal_display_t }
+
+
+
+/*************************************************************************** 
+ * 
  * Types used by the app itself
  * 
  ****************************************************************************/
