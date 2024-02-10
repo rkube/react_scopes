@@ -4,8 +4,7 @@ import { CSS } from "@dnd-kit/utilities"
 
 import { useDraggable } from "@dnd-kit/core"
 
-import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react"
-import { Box, Button, Center, Flex, Text, HStack, VStack } from "@chakra-ui/react"
+import { Box, Button, Text, VStack } from "@chakra-ui/react"
 import { DeleteIcon } from "@chakra-ui/icons"
 
 
@@ -35,26 +34,20 @@ const SignalCard = ({signal, ix, parent, cb}: signal_card_i) => {
       };
 
       return ( 
-        <Box border="dashed red 1px" width="100%">
-        <Center>
-          <Flex>
-          <VStack>
+        <Box border="dashed red 1px" width="100%" alignContent="center">
+            <VStack>
 
-        <Box color='black' width='200px' maxW='sm' borderWidth='1px' borderRadius='lg' as='span'
-
-          transform={style.transform}
-          {...listeners}
-          {...attributes}
-          ref={setNodeRef}>
-              <Text> {to_str(signal)} </Text>
+        <Box border="dashed blue 1px" color='black' width='100px' maxW='sm' borderWidth='1px' borderRadius='lg' as='span'
+            transform={style.transform}
+            {...listeners}
+            {...attributes}
+            ref={setNodeRef}>
+            <Text> {to_str(signal)} </Text>
 
         </Box>
-        <Button onClick={() => cb(signal.id)} colorScheme='teal' size='sm'>  <DeleteIcon/> </Button>
+        <Button width="100%" onClick={() => cb(signal.id)} colorScheme='teal' size='sm'>  <DeleteIcon/> </Button>
 
         </VStack>
-
-        </Flex>
-        </Center>
 
         </Box>
       )

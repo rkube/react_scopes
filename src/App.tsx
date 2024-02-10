@@ -104,9 +104,6 @@ function App() {
         collisionDetection={rectIntersection}
         onDragEnd={handleDragEnd}>
       <ChakraProvider>
-
-
-
         {/* https://stackoverflow.com/questions/55601342/using-enumerations-in-react-select */}
         <Box alignItems="center" justifyContent="center" height="50px" border="dashed red 1px">
         <RadioGroup onChange={(e) => set_ptr_mode(e as ptr_mode_t)} value={ptr_mode}>
@@ -121,7 +118,7 @@ function App() {
 
       <Grid
         templateRows={'50px 1fr'}
-        templateColumns={'1fr 4fr'}
+        templateColumns={'250px 1000px'}
         h='500px'
         alignItems='stretch'
         // color='blackAlpha.700'

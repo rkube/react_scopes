@@ -50,7 +50,6 @@ function ScopesGrid({signal_lists, ptr_mode}: ScopesGrid_i) {
             <GridItem>
                 <Box border="1px red dashed">
                 <Tabs>
-                    
                     <TabList>
                         <Tab> Plot </Tab>
                         <Tab> Signals </Tab>
@@ -63,13 +62,7 @@ function ScopesGrid({signal_lists, ptr_mode}: ScopesGrid_i) {
                         </TabPanel>
                         <TabPanel> Signals 
                             <DroppableArea title="area1" signal_list={signal_list_1} />
-                        {/* <UnorderedList>
-                            {signal_list.map((item, ix) => (
-                                <ListItem key={ix}> {to_str(item)} </ListItem>
-                            ))}
-                        </UnorderedList> */}
                         </TabPanel>
-
                         <TabPanel> Settings here </TabPanel>
                     </TabPanels>
 
@@ -78,7 +71,6 @@ function ScopesGrid({signal_lists, ptr_mode}: ScopesGrid_i) {
             </GridItem>
 
             <GridItem>
-                
                 <Box border="1px red dashed">
                 <Tabs>
                     <TabList>
@@ -94,11 +86,6 @@ function ScopesGrid({signal_lists, ptr_mode}: ScopesGrid_i) {
                         </TabPanel>
                         <TabPanel> Signals 
                             <DroppableArea title="area2" signal_list={signal_list_2} />
-                         {/* <UnorderedList>
-                            {signal_list.map((item, ix) => (
-                                <ListItem key={ix}> {to_str(item)} </ListItem>
-                            ))}
-                        </UnorderedList> */}
                         </TabPanel>
                         <TabPanel> Settings here </TabPanel>
                     </TabPanels>

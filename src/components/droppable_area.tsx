@@ -1,9 +1,8 @@
 // droppable_area.tsx
-// import { Fragment } from "react";
 import { Flex, List, ListItem, Text } from "@chakra-ui/react";
 import { useDroppable } from "@dnd-kit/core";
 
-// import { SignalCard } from "./signal_card";
+import { SignalInfoCard } from "./signal_info_card";
 
 import { signal_t, to_str } from "../types/all_types";
 
@@ -36,15 +35,7 @@ function DroppableArea({ title, signal_list }: droppable_props) {
       >
         <List>
         {signal_list.map((item, ix) => (
-            <ListItem key={ix}>
-                {to_str(item)} - {ix}
-            </ListItem>
-        // Don't render to the SignalCard because it's draggable. When
-        // dragging a signal card in MyList, it also drags these components :/
-        // So use a list for now until I come up with a smarter solution.
-        // <Fragment key={ix}>
-        //    <SignalCard signal={item} ix={ix} parent={title} cb={(ix:number) => console.log("Callback in droppable, ix=",ix)} />
-        // </Fragment>
+            <SignalInfoCard signal={item} ix={ix} />
         ))}
         </List>
       </Flex>
