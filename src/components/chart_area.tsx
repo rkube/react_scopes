@@ -1,6 +1,6 @@
 
 import { useState, useRef } from "react"
-import { Grid, GridItem, ListItem, UnorderedList } from "@chakra-ui/react"
+import { Grid, GridItem } from "@chakra-ui/react"
 import { Box, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 
 import { MyPlot } from "./mychart"
@@ -13,11 +13,11 @@ interface ScopesGrid_i {
     signal_lists: signal_t[][]
     signal_list_setters:  React.Dispatch<React.SetStateAction<signal_t[]>>[]
     ptr_mode: ptr_mode_t
+    num_rows: number
 }
 
 
-// function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode: ptr_mode_t}) {
-function ScopesGrid({signal_lists, signal_list_setters, ptr_mode}: ScopesGrid_i) {
+function ScopesGrid({signal_lists, signal_list_setters, ptr_mode, num_rows}: ScopesGrid_i) {
 
     // Destructure signal_lists
     const signal_list_1 = signal_lists[0]
@@ -51,9 +51,9 @@ function ScopesGrid({signal_lists, signal_list_setters, ptr_mode}: ScopesGrid_i)
     const plugin_list = [new cross_hair_plugin(xtalk_ref, chart_cb)]
 
     return (
-        <Grid templateColumns={'1fr 1fr'}>
+        <Grid templateColumns={'0.5fr 0.5fr'} templateRows={'600px'} columnGap={'10px'}>
             <GridItem>
-                <Box border="1px red dashed">
+                <Box border="1px purple dashed">
                 <Tabs>
                     <TabList>
                         <Tab> Plot </Tab>
@@ -76,7 +76,7 @@ function ScopesGrid({signal_lists, signal_list_setters, ptr_mode}: ScopesGrid_i)
             </GridItem>
 
             <GridItem>
-                <Box border="1px red dashed">
+                <Box border="1px purple dashed">
                 <Tabs>
                     <TabList>
                         <Tab> Plot </Tab>
@@ -90,7 +90,7 @@ function ScopesGrid({signal_lists, signal_list_setters, ptr_mode}: ScopesGrid_i)
 
                         </TabPanel>
                         <TabPanel> Signals 
-                            <DroppableArea title="area2" signal_list={signal_list_2} signal_list_setter={set_signal_list_1}/>
+                            <DroppableArea title="area2" signal_list={signal_list_2} signal_list_setter={set_signal_list_2}/>
                         </TabPanel>
                         <TabPanel> Settings here </TabPanel>
                     </TabPanels>
@@ -98,6 +98,10 @@ function ScopesGrid({signal_lists, signal_list_setters, ptr_mode}: ScopesGrid_i)
                 </Tabs>
                 </Box>
 
+            </GridItem>
+
+            <GridItem>
+                <Box border='1px orange solid' height={'1fr'}> Test </Box>
             </GridItem>
             </Grid>
     )

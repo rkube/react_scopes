@@ -3,11 +3,10 @@ import { useState } from "react";
 
 import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react";
 import { NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper } from '@chakra-ui/react'
-import { Button } from "@chakra-ui/react";
-
-import { Box } from "@chakra-ui/react";
-
+import { Box, Button, Spacer } from "@chakra-ui/react";
 import { AccordionPanel, AccordionButton, AccordionIcon } from "@chakra-ui/react";
+
+import { DeleteIcon } from "@chakra-ui/icons";
 
 import { signal_display_t, signal_t, to_str } from "../types/all_types";
 import { default_colors } from "../lib/helpers";
@@ -16,20 +15,26 @@ interface signal_info_card_i {
     signal_list: signal_t[];
     ix: number;
     setter: React.Dispatch<React.SetStateAction<signal_t[]>>;
-    // key: number;
-    // signal_cfg: signal_display_t;
-    // cb?:  (id: number) => void;
 }
 
 
 
+/*
+ * This component handles updates to the style of a signal.
+ * It shows forms for each component that can be modified, caches
+ * style changes in a local style component. To commit the cached update,
+ * it renders a button. On clicked, this button modifies the signal_list for
+ * this plot.
+ * 
+ * Additionally, it renders a button to remove the signal from the list for the current plot.
+ */
 function SignalSettingCard(props: signal_info_card_i) {
-
-
-
     const {signal_list, ix, setter} = props
     const signal = signal_list[ix]
 
+    // The form in the accordion below updates this style element.
+    // Updates to the style of a signal are performed using this
+    // object
     const [new_style, set_new_style] = useState<signal_display_t> ({
         scaling: signal.style ? signal.style.scaling : (x) => x,
         color: signal.style ? signal.style.color : default_colors(signal.type),
@@ -37,36 +42,26 @@ function SignalSettingCard(props: signal_info_card_i) {
         thickness: signal.style ? signal.style.thickness : 3
     })
 
-
+    // Updates the signal list for this plot to match the style items
+    // selected in the accordion below
     const handle_submit = () => {
-        // console.log("event = ", event)
-        console.log("new_style = ", new_style)
-        // console.log("Color input: ", event)
         const new_signal_list = [...signal_list]
         const new_signal = new_signal_list[ix]
-
         new_signal.style = new_style
-        
-        // if (new_signal.style) {
-        //     new_signal.style.color = event.target.value
-        // } else {
-        //     new_signal.style = {scaling: (val: number) => val,
-        //                         color: event.target.value,
-        //                         borderDash: [],
-        //                         thickness: 1}
-        // }
         setter(new_signal_list)
+    }
 
-
+    // Handles the red delete button
+    // Remove the signal from this plots list.
+    const handle_delete = () => {
+        setter(signal_list.filter((item) => item.id !== signal_list[ix].id))
     }
 
     return(
         <Box>
             <h2>
                 <AccordionButton >
-                    <Box as="span" flex="1" textAlign="left">
-                    {to_str(signal)}
-                    </Box>
+                    <Box flex="1" textAlign="left"> {to_str(signal)} </Box>
                     <AccordionIcon />
                 </AccordionButton>
             </h2>
@@ -140,6 +135,8 @@ function SignalSettingCard(props: signal_info_card_i) {
                                 </Input>
                         </FormControl>                    
                     <Button width="100%" onClick={handle_submit}> Update</Button>
+
+                    <Button width='100%' onClick={handle_delete} bg='red'> <DeleteIcon /> </Button> 
                     </form>
                 </Stack> 
             </AccordionPanel>

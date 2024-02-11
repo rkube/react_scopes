@@ -1,9 +1,7 @@
 //
 import { useState } from 'react'
 import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
-import { Box } from '@chakra-ui/react'
-import { Divider } from '@chakra-ui/react'
-import { Button, RadioGroup, Radio, Stack, VStack} from '@chakra-ui/react'
+import { Box, Flex, Divider, RadioGroup, Radio, Stack, Spacer} from '@chakra-ui/react'
 import './App.css'
 
 import { DndContext, rectIntersection } from '@dnd-kit/core'
@@ -12,6 +10,7 @@ import { type_t, signal_t, ptr_mode_types, ptr_mode_t, to_id } from './types/all
 import { MyList } from './components/list'
 import { Selector } from './components/selector'
 import { ScopesGrid } from './components/chart_area'
+import { RowSelector } from './components/row_selector'
 
 
 function App() {
@@ -34,12 +33,13 @@ function App() {
   // Global signal list
   const [signal_list, set_signal_list] = useState<signal_t[]>(init_state)
 
+  // Number of rows
+  const [num_rows, set_num_rows] = useState<number>(1)
+
   // These are the signals to be rendered by the plots in ScopesGrids.
   const [signal_list_1, set_signal_list_1] = useState<signal_t[]>([])
   const [signal_list_2, set_signal_list_2] = useState<signal_t[]>([])
 
-  // These are the signals that are loaded globally
-  // const [signal_list_global, set_signal_list_global] = useState<signal_t[]>(init_state)
 
   // Drag and Drop
   const [isDropped, setIsDropped] = useState(false);
@@ -71,7 +71,6 @@ function App() {
   // Arguments:
   // id_delete (string) - The `id` of the item to be filtered out of the list
   const remove_signal_cb = (id_delete: string) => {
-    console.log("remove_signal_cb")
     set_signal_list_1(signal_list_1.filter((item) => item.id !== id_delete))
     set_signal_list_2(signal_list_2.filter((item) => item.id !== id_delete))
     set_signal_list(signal_list.filter((item) => item.id !== id_delete))
@@ -90,7 +89,6 @@ function App() {
 
       setIsDropped(true);
       console.log("Dropped over area1!")
-      console.log("signal = ", event.active.data.current.signal)
       set_signal_list_1([...signal_list_1, event.active.data.current.signal])
     } else if (event.over && event.over.id == 'area2') {
       setIsDropped(true);
@@ -105,7 +103,7 @@ function App() {
         collisionDetection={rectIntersection}
         onDragEnd={handleDragEnd}>
       <ChakraProvider>
-        {/* https://stackoverflow.com/questions/55601342/using-enumerations-in-react-select */}
+        <Flex >
         <Box alignItems="center" justifyContent="center" height="50px" border="dashed red 1px">
         <RadioGroup onChange={(e) => set_ptr_mode(e as ptr_mode_t)} value={ptr_mode}>
           <Stack direction='row'>
@@ -115,28 +113,35 @@ function App() {
           </Stack>
         </RadioGroup>
         </Box>
+        <Spacer />
+        <Divider orientation='vertical' />
+        <Box> 
+          <RowSelector num_rows={num_rows} set_num_rows={set_num_rows} />
+        </Box>
+        </Flex>
       <Divider borderColor={'blackAlpha'} size='lg' />
 
       <Grid
-        templateRows={'50px 1fr'}
+        // templateRows={'500px 300px'}
         templateColumns={'250px 1000px'}
-        h='500px'
+
         alignItems='stretch'
         // color='blackAlpha.700'
         fontWeight='bold'
       >
 
-      <GridItem >
-
+      <GridItem border='2px dashed green'>
         <Selector add_button_cb={handleNewSignal} />
-
         <Divider borderColor={'blackAlpha'}  size='xl'  />
         <MyList signal_list={signal_list} 
                 cb={remove_signal_cb} />
       </GridItem>
 
       <GridItem>
-        <ScopesGrid signal_lists={[signal_list_1, signal_list_2]} signal_list_setters={[set_signal_list_1, set_signal_list_2]} ptr_mode={ptr_mode} />
+        <ScopesGrid signal_lists={[signal_list_1, signal_list_2]} 
+                    signal_list_setters={[set_signal_list_1, set_signal_list_2]} 
+                    ptr_mode={ptr_mode} 
+                    num_rows={num_rows}/>
       </GridItem>
     </Grid>
     </ChakraProvider>

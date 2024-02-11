@@ -1,5 +1,5 @@
 // droppable_area.tsx
-import { Flex, List, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 
 import { Accordion, AccordionItem } from "@chakra-ui/react";
 import { useDroppable } from "@dnd-kit/core";

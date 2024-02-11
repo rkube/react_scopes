@@ -1,32 +1,11 @@
 // Diong plotting stuff
 
 import { useRef } from 'react';
-import { ptr_mode_t, signal_t, to_str, type_t } from '../types/all_types'
-import { Chart as ChartJS, ChartType, Plugin as PluginC, registerables, ChartOptions } from 'chart.js';
+import { ptr_mode_t, signal_t, to_str } from '../types/all_types'
+import { Chart as ChartJS, Plugin as PluginC, registerables, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
 import { default_colors } from '../lib/helpers';
-
-// const pick_color = (sig_type: type_t): string => {
-//     console.log("pick_color sig_Type = ", sig_type)
-//     switch(sig_type) {
-//         case "Type1":
-//             console.log("Picking color - Type 1")
-//             return 'rgb(127, 201, 127)'
-//             break
-//         case "Type2":
-//             console.log("Picking color - Type 2")
-//             return 'rgb(190, 174, 211)'
-//             break
-//         case "Type3":
-//             console.log("Picking color - Type 3")
-//             return 'rgb(253, 192, 134)'
-//             break
-//         default:
-//             return 'rgb(255, 255, 153)'
-//     }
-// }
-
 
 
 interface my_plot_i {
