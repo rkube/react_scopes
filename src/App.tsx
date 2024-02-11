@@ -23,7 +23,8 @@ function App() {
       type: "Type1",
       id: to_id(100, "Type_1"),
       timebase: [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0],
-      samples: [0.0, 0.48, 0.84, 1.0, 0.91, 0.60, 0.14]
+      samples: [0.0, 0.48, 0.84, 1.0, 0.91, 0.60, 0.14],
+      style: undefined
     },
   ]
 
@@ -61,7 +62,7 @@ function App() {
 
     const new_item = {shot: new_shot, type: new_type, index: new_ix, 
       id: to_id(new_shot, new_type),
-      timebase: timebase, samples: samples}
+      timebase: timebase, samples: samples, style: undefined}
     // Update state
     set_signal_list([...signal_list, new_item])
   }
@@ -135,7 +136,7 @@ function App() {
       </GridItem>
 
       <GridItem>
-        <ScopesGrid signal_lists={[signal_list_1, signal_list_2]} ptr_mode={ptr_mode} />
+        <ScopesGrid signal_lists={[signal_list_1, signal_list_2]} signal_list_setters={[set_signal_list_1, set_signal_list_2]} ptr_mode={ptr_mode} />
       </GridItem>
     </Grid>
     </ChakraProvider>

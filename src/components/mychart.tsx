@@ -5,25 +5,27 @@ import { ptr_mode_t, signal_t, to_str, type_t } from '../types/all_types'
 import { Chart as ChartJS, ChartType, Plugin as PluginC, registerables, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
-const pick_color = (sig_type: type_t): string => {
-    console.log("pick_color sig_Type = ", sig_type)
-    switch(sig_type) {
-        case "Type1":
-            console.log("Picking color - Type 1")
-            return 'rgb(127, 201, 127)'
-            break
-        case "Type2":
-            console.log("Picking color - Type 2")
-            return 'rgb(190, 174, 211)'
-            break
-        case "Type3":
-            console.log("Picking color - Type 3")
-            return 'rgb(253, 192, 134)'
-            break
-        default:
-            return 'rgb(255, 255, 153)'
-    }
-}
+import { default_colors } from '../lib/helpers';
+
+// const pick_color = (sig_type: type_t): string => {
+//     console.log("pick_color sig_Type = ", sig_type)
+//     switch(sig_type) {
+//         case "Type1":
+//             console.log("Picking color - Type 1")
+//             return 'rgb(127, 201, 127)'
+//             break
+//         case "Type2":
+//             console.log("Picking color - Type 2")
+//             return 'rgb(190, 174, 211)'
+//             break
+//         case "Type3":
+//             console.log("Picking color - Type 3")
+//             return 'rgb(253, 192, 134)'
+//             break
+//         default:
+//             return 'rgb(255, 255, 153)'
+//     }
+// }
 
 
 
@@ -57,8 +59,10 @@ const MyPlot = ({signals, plugin_list, ptr_mode}: my_plot_i ) => {
     // Generate datasets from the signal list that are passed to the LinePlot
     const signal_datasets = signals.map((sig) => { return{
         label: to_str(sig), 
-        data: sig.samples,
-        borderColor: pick_color(sig.type)
+        data: (sig.style) ? sig.samples.map(sig.style.scaling) : sig.samples,
+        borderColor: (sig.style) ? sig.style.color : default_colors(sig.type),
+        borderWidth: (sig.style) ? sig.style.thickness : 1,
+        borderDash: (sig.style) ? sig.style.borderDash : []
     }})
 
     // We need to tell TS that we have options for a line plot
@@ -156,4 +160,4 @@ const MyPlot = ({signals, plugin_list, ptr_mode}: my_plot_i ) => {
     )
 }
 
-export default MyPlot
+export { MyPlot }

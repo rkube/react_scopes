@@ -17,6 +17,7 @@ type signal_t = {
     type: type_t,
     samples: number[],
     timebase: number[],
+    style: signal_display_t | undefined
 }
 
 // Build id from a signal
@@ -40,7 +41,7 @@ export {type type_t, type signal_t, to_str, to_id}
 type signal_display_t = {
     scaling: (val: number) => number;
     color: string;
-    line_style: string;
+    borderDash: number[];
     thickness: number;
 }
 

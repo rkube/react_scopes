@@ -3,7 +3,7 @@ import { useState, useRef } from "react"
 import { Grid, GridItem, ListItem, UnorderedList } from "@chakra-ui/react"
 import { Box, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 
-import MyPlot from "./mychart"
+import { MyPlot } from "./mychart"
 import { cross_hair_t, ptr_mode_t, signal_t } from "../types/all_types"
 import { cross_hair_plugin } from "./cross_hair_plugin"
 
@@ -11,16 +11,21 @@ import { DroppableArea } from "./droppable_area"
 
 interface ScopesGrid_i {
     signal_lists: signal_t[][]
+    signal_list_setters:  React.Dispatch<React.SetStateAction<signal_t[]>>[]
     ptr_mode: ptr_mode_t
 }
 
 
 // function ScopesGrid({signal_list, ptr_mode}: {signal_list: signal_t[], ptr_mode: ptr_mode_t}) {
-function ScopesGrid({signal_lists, ptr_mode}: ScopesGrid_i) {
+function ScopesGrid({signal_lists, signal_list_setters, ptr_mode}: ScopesGrid_i) {
 
     // Destructure signal_lists
     const signal_list_1 = signal_lists[0]
     const signal_list_2 = signal_lists[1]
+
+    const set_signal_list_1 = signal_list_setters[0]
+    const set_signal_list_2 = signal_list_setters[1]
+
 
     console.log("signal_list_1 = ", signal_list_1)
     console.log("signal_list_2 = ", signal_list_2)
@@ -61,7 +66,7 @@ function ScopesGrid({signal_lists, ptr_mode}: ScopesGrid_i) {
                             <MyPlot signals={signal_list_1} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
                         </TabPanel>
                         <TabPanel> Signals 
-                            <DroppableArea title="area1" signal_list={signal_list_1} />
+                            <DroppableArea title="area1" signal_list={signal_list_1} signal_list_setter={set_signal_list_1}/>
                         </TabPanel>
                         <TabPanel> Settings here </TabPanel>
                     </TabPanels>
@@ -85,7 +90,7 @@ function ScopesGrid({signal_lists, ptr_mode}: ScopesGrid_i) {
 
                         </TabPanel>
                         <TabPanel> Signals 
-                            <DroppableArea title="area2" signal_list={signal_list_2} />
+                            <DroppableArea title="area2" signal_list={signal_list_2} signal_list_setter={set_signal_list_1}/>
                         </TabPanel>
                         <TabPanel> Settings here </TabPanel>
                     </TabPanels>
