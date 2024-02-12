@@ -13,7 +13,7 @@ import { Selector } from './components/selector'
 import { DynamicGrid } from './components/dynamic_grid'
 import { RowSelector } from './components/row_selector'
 
-import { type_t, signal_t, ptr_mode_types, ptr_mode_t, to_id, reducer_action_t, signal_display_t } from './types/all_types'
+import { type_t, signal_t, ptr_mode_types, ptr_mode_t, to_id, reducer_action_t } from './types/all_types'
 
 
 function App() {
@@ -50,54 +50,72 @@ function App() {
 
 
     if (action.type === 'add_signal') {
-      // console.log(`Reducer: adding signal at ix=${action.ix}`)
+      // Push the signal in the action into state[action.ix]
+      // console.log(`Reducer: adding signal at action.ix=${action.ix}`)
       // console.log(`number of signal_lists: ${state.length}`)
       if ((action.ix <= state.length) && action.signal) {
         console.log("------------ reducer: adding signal at ", action.ix)
-        console.log("             original state: ", state)
-        console.log("             old signal list = ", state[action.ix])
+        // console.log("             original state: ", state)
+        // console.log("             old signal list = ", state[action.ix])
 
         // Remember to not mutate state!!!
         var new_state = [] as signal_t[][]
-
-        console.log("            new_state = ", new_state)
-
-        console.log("    ------ pushing stuff ------")
+        // console.log("          new_state = ", new_state)
         
         // Push copies of all signal lists into state
         for(var ix = 0; ix < action.ix; ix++) {
-          console.log("  xoxoxox first loop: pushing")
-          new_state.push([...state[ix]])
+          // console.log("  xoxoxox first loop: ix=", ix)
+          // console.log("      pushing: ", JSON.parse(JSON.stringify(state[ix])))
+          new_state.push(JSON.parse(JSON.stringify(state[ix])))
         }
-        console.log("        after first loop: ", new_state)
+        // console.log("        after first loop: state=", new_state)
 
-        // Push a copy of state[ix], with the new signal added to it.
-        var new_signal_list = [...state[ix]]
+        // // Push a copy of state[ix], with the new signal added to it.
+        var new_signal_list = JSON.parse(JSON.stringify(state[action.ix]))
         new_signal_list.push(action.signal)
+        // console.log("         new_signal_list = ", new_signal_list)
         new_state.push(new_signal_list)
 
-        console.log("        after middle: ", new_state)
+        // console.log("        after middle: state=", new_state)
 
         // Push copies of all remaining signal lists into new state
-        for(var ix = action.ix; ix < state.length - 1; ix++) {
-          console.log("   xoxoxox second loop: pushing")
-          new_state.push([...state[ix]])
+        for(var ix = action.ix + 1; ix < state.length; ix++) {
+          // console.log("   xoxoxox second loop: ix=", ix)
+          new_state.push(JSON.parse(JSON.stringify(state[ix])))
         }
 
         console.log("         new state: ", new_state)
-        console.log("         new signal list = ", new_state[action.ix])
+        // console.log("         new signal list = ", new_state[action.ix])
         return new_state
       } else {
         throw Error("Reducer: trying to access signal_lists out of bounds or signal undefined")
       }
     } else if (action.type === 'rm_signal') {
-      // console.log(`Reducer: removing signal at ix=${action.ix}`)
-      // console.log(`state.length = ${state.length}`)
-      // console.log(`id = ${action.id}`)
+      console.log("Reducer: rm_signal. action=", action)
+      console.log("         state = ", state)
+      console.log(`         state.length = ${state.length}`)
+      console.log(`         id = ${action.id}`)
 
       if ((action.ix <= state.length) && (action.id)){
-        state[action.ix] = state[action.ix].filter((item) => item.id !== action.id)
-        return state
+        // Remember: don't mutate state. Build a new one and modify as appropriate
+        var new_state = [] as signal_t[][]
+        for(var ix = 0; ix < action.ix; ix++) {
+          console.log("        loop1: ix=", ix)
+          new_state.push(JSON.parse(JSON.stringify(state[ix])))
+        }
+        // Make a copy of the appropriate signal and filter this copy
+        var new_signal_list = JSON.parse(JSON.stringify(state[ix]))
+        new_signal_list = new_signal_list.filter((item: signal_t) => item.id !== action.id)
+        console.log("new_signal_list = ", new_signal_list)
+        new_state.push(new_signal_list)
+
+        for(var ix = action.ix; ix < state.length - 1; ix++) {
+          console.log("          loop2: ix=", ix)
+          new_state.push(JSON.parse(JSON.stringify(state[ix])))
+        }
+
+        console.log("          new_state = ", new_state)
+        return new_state
       } else {
         throw Error("Reducer: Trying to access signal_lists out of bounds or missing id.")
       }
@@ -182,7 +200,7 @@ function App() {
         update_ix = 1
       }
 
-      console.log(`Updating at ix=${update_ix}`)
+      console.log(`handleDragEnd: Updating at ix=${update_ix}`)
       dispatch_signal_lists({
         type: 'add_signal',
         ix: update_ix,

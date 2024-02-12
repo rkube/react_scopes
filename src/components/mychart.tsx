@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { ptr_mode_t, signal_t, to_str } from '../types/all_types'
-import { Chart as ChartJS, Plugin as PluginC, registerables, ChartOptions } from 'chart.js';
+import { Chart as ChartJS, registerables, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
 import { default_colors } from '../lib/helpers';

@@ -14,7 +14,7 @@ interface selector_i {
 
 const Selector = ({add_button_cb} : selector_i) => {
 
-  console.log("Selector: add_button_cb = ", add_button_cb)
+  // console.log("Selector: add_button_cb = ", add_button_cb)
 
   const [shot, setShot] = useState<number | undefined >(undefined);
   const [selectedType, setSelectedType] = useState<type_t>("Type1")
@@ -22,7 +22,7 @@ const Selector = ({add_button_cb} : selector_i) => {
 
   // Update selectedType from select menu:
   const update_type = (e: React.FormEvent<HTMLSelectElement>) => {
-    console.log("update_type, type = ", e.currentTarget.value);
+    // console.log("update_type, type = ", e.currentTarget.value);
     setSelectedType(e.currentTarget.value as type_t)
   }
 

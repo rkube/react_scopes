@@ -12,11 +12,11 @@ import { signal_display_t, signal_t, to_str, reducer_action_t } from "../types/a
 import { default_colors } from "../lib/helpers";
 
 interface signal_info_card_i {
-    signal_list: signal_t[];
-    ix: number;
+    signal_list: signal_t[];    // The signal list we are processing
+    signal_list_ix: number;     // Index of the signal list in the state object
+    signal_ix: number;          // Index of the signal in signal_list which we display
     dispatch_signal_lists: React.Dispatch<reducer_action_t>;
 }
-
 
 
 /*
@@ -28,9 +28,11 @@ interface signal_info_card_i {
  * 
  * Additionally, it renders a button to remove the signal from the list for the current plot.
  */
-function SignalSettingCard(props: signal_info_card_i) {
-    const {signal_list, ix, dispatch_signal_lists} = props
-    const signal = signal_list[ix]
+function SignalSettingCard( {signal_list, signal_list_ix, signal_ix, dispatch_signal_lists}: signal_info_card_i) {
+    // console.log("SignalSettingCard: signal_ix = ", signal_ix)
+    const signal = signal_list[signal_ix]
+
+    // console.log("SignalSettingCard: signal = ", signal)
 
     // The form in the accordion below updates this style element.
     // Updates to the style of a signal are performed using this
@@ -49,7 +51,7 @@ function SignalSettingCard(props: signal_info_card_i) {
         // const new_signal = new_signal_list[ix]
         // new_signal.style = new_style
 
-        console.log("Updating style with ", new_style)
+        // console.log("Updating style with ", new_style)
         // Update style with new dispatch
         // dispatch_signal_lists({
         //     type: "update_style",
@@ -62,7 +64,12 @@ function SignalSettingCard(props: signal_info_card_i) {
     // Handles the red delete button
     // Remove the signal from this plots list.
     const handle_delete = () => {
-        console.log("TODO:  remove signal using the reducer")
+        console.log("handle_delete: ix=", signal_ix, ", id = ", signal.id)
+        dispatch_signal_lists({
+            type: "rm_signal",
+            ix: signal_list_ix,
+            id: signal.id
+        })
         // setter(signal_list.filter((item) => item.id !== signal_list[ix].id))
     }
 
@@ -70,7 +77,7 @@ function SignalSettingCard(props: signal_info_card_i) {
         <Box>
             <h2>
                 <AccordionButton >
-                    <Box flex="1" textAlign="left"> {to_str(signal)} </Box>
+                    <Box flex="1" textAlign="left"> ix={signal_ix} - {to_str(signal)} </Box>
                     <AccordionIcon />
                 </AccordionButton>
             </h2>

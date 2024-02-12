@@ -18,12 +18,12 @@ interface droppable_area_i {
  * draggable.
  */
 
-function DroppableArea({ title, signal_list, dispatch_signal_lists }: droppable_area_i) {
+function DroppableArea({ title, signal_list, signal_ix, dispatch_signal_lists }: droppable_area_i) {
   const { setNodeRef } = useDroppable({
     id: title,
   });
 
-  console.log("DroppableArea: signal_list = ", signal_list)
+  // console.log("DroppableArea: signal_list = ", signal_list)
 
   return (
     <Flex flex="3" padding="5" flexDirection="column" minH="10rem">
@@ -39,7 +39,7 @@ function DroppableArea({ title, signal_list, dispatch_signal_lists }: droppable_
         <Accordion allowMultiple>
         {signal_list.map((item, ix) => (
           <AccordionItem key={ix}>
-            <SignalSettingCard signal_list={signal_list} ix={ix} dispatch_signal_lists={dispatch_signal_lists} />
+            <SignalSettingCard signal_list={signal_list} signal_list_ix={signal_ix} signal_ix={ix} dispatch_signal_lists={dispatch_signal_lists} />
             </AccordionItem>
         ))}
         </Accordion>
