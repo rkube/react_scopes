@@ -8,13 +8,13 @@ import { AccordionPanel, AccordionButton, AccordionIcon } from "@chakra-ui/react
 
 import { DeleteIcon } from "@chakra-ui/icons";
 
-import { signal_display_t, signal_t, to_str } from "../types/all_types";
+import { signal_display_t, signal_t, to_str, reducer_action_t } from "../types/all_types";
 import { default_colors } from "../lib/helpers";
 
 interface signal_info_card_i {
     signal_list: signal_t[];
     ix: number;
-    setter: React.Dispatch<React.SetStateAction<signal_t[]>>;
+    dispatch_signal_lists: React.Dispatch<reducer_action_t>;
 }
 
 
@@ -29,7 +29,7 @@ interface signal_info_card_i {
  * Additionally, it renders a button to remove the signal from the list for the current plot.
  */
 function SignalSettingCard(props: signal_info_card_i) {
-    const {signal_list, ix, setter} = props
+    const {signal_list, ix, dispatch_signal_lists} = props
     const signal = signal_list[ix]
 
     // The form in the accordion below updates this style element.
@@ -45,16 +45,25 @@ function SignalSettingCard(props: signal_info_card_i) {
     // Updates the signal list for this plot to match the style items
     // selected in the accordion below
     const handle_submit = () => {
-        const new_signal_list = [...signal_list]
-        const new_signal = new_signal_list[ix]
-        new_signal.style = new_style
-        setter(new_signal_list)
+        // const new_signal_list = [...signal_list]
+        // const new_signal = new_signal_list[ix]
+        // new_signal.style = new_style
+
+        console.log("Updating style with ", new_style)
+        // Update style with new dispatch
+        // dispatch_signal_lists({
+        //     type: "update_style",
+
+        // })
+
+        // setter(new_signal_list)
     }
 
     // Handles the red delete button
     // Remove the signal from this plots list.
     const handle_delete = () => {
-        setter(signal_list.filter((item) => item.id !== signal_list[ix].id))
+        console.log("TODO:  remove signal using the reducer")
+        // setter(signal_list.filter((item) => item.id !== signal_list[ix].id))
     }
 
     return(

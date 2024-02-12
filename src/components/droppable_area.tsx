@@ -1,17 +1,15 @@
 // droppable_area.tsx
 import { Flex, Text } from "@chakra-ui/react";
-
 import { Accordion, AccordionItem } from "@chakra-ui/react";
 import { useDroppable } from "@dnd-kit/core";
-
 import { SignalSettingCard } from "./signal_info_card";
+import { signal_t, reducer_action_t } from "../types/all_types";
 
-import { signal_t } from "../types/all_types";
-
-interface droppable_props {
+interface droppable_area_i {
   title: string;                // Title of the droppable area
   signal_list: signal_t[];      // List of signals in this area
-  signal_list_setter: React.Dispatch<React.SetStateAction<signal_t[]>>;
+  signal_ix: number             // Index of the signal_list 
+  dispatch_signal_lists: React.Dispatch<reducer_action_t>;
 }
 
 /*
@@ -20,10 +18,12 @@ interface droppable_props {
  * draggable.
  */
 
-function DroppableArea({ title, signal_list, signal_list_setter }: droppable_props) {
+function DroppableArea({ title, signal_list, dispatch_signal_lists }: droppable_area_i) {
   const { setNodeRef } = useDroppable({
     id: title,
   });
+
+  console.log("DroppableArea: signal_list = ", signal_list)
 
   return (
     <Flex flex="3" padding="5" flexDirection="column" minH="10rem">
@@ -39,7 +39,7 @@ function DroppableArea({ title, signal_list, signal_list_setter }: droppable_pro
         <Accordion allowMultiple>
         {signal_list.map((item, ix) => (
           <AccordionItem key={ix}>
-            <SignalSettingCard signal_list={signal_list} ix={ix} setter={signal_list_setter} />
+            <SignalSettingCard signal_list={signal_list} ix={ix} dispatch_signal_lists={dispatch_signal_lists} />
             </AccordionItem>
         ))}
         </Accordion>

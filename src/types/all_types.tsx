@@ -47,6 +47,21 @@ type signal_display_t = {
 
 export { type signal_display_t }
 
+/*************************************************************************** 
+ * 
+ * Actions for the signal_lists reducer
+ * 
+ ****************************************************************************/
+
+type reducer_action_t = {
+    type: 'add_signal' | 'rm_signal' | 'update_style',  // The action to take
+    ix: number,                                         // Index for the lists
+    id?: string,                                         // Identify indices within list
+    signal?: signal_t,                                  // Optional signal to add for 'add_signal'
+    style?: signal_display_t                            // Style update for 'update_style'
+}
+
+export {type reducer_action_t}
 
 
 /*************************************************************************** 
