@@ -37,7 +37,7 @@ function DroppableArea({ title, signal_list, signal_ix, dispatch_signal_lists }:
         flexDirection="column"
       >
         <Accordion allowMultiple>
-        {signal_list.map((item, ix) => (
+        {signal_list.map((_, ix) => (
           <AccordionItem key={ix}>
             <SignalSettingCard signal_list={signal_list} signal_list_ix={signal_ix} signal_ix={ix} dispatch_signal_lists={dispatch_signal_lists} />
             </AccordionItem>

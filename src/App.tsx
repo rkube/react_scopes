@@ -54,7 +54,7 @@ function App() {
       // console.log(`Reducer: adding signal at action.ix=${action.ix}`)
       // console.log(`number of signal_lists: ${state.length}`)
       if ((action.ix <= state.length) && action.signal) {
-        console.log("------------ reducer: adding signal at ", action.ix)
+        // console.log("------------ reducer: adding signal at ", action.ix)
         // console.log("             original state: ", state)
         // console.log("             old signal list = ", state[action.ix])
 
@@ -84,37 +84,37 @@ function App() {
           new_state.push(JSON.parse(JSON.stringify(state[ix])))
         }
 
-        console.log("         new state: ", new_state)
+        // console.log("         new state: ", new_state)
         // console.log("         new signal list = ", new_state[action.ix])
         return new_state
       } else {
         throw Error("Reducer: trying to access signal_lists out of bounds or signal undefined")
       }
     } else if (action.type === 'rm_signal') {
-      console.log("Reducer: rm_signal. action=", action)
-      console.log("         state = ", state)
-      console.log(`         state.length = ${state.length}`)
-      console.log(`         id = ${action.id}`)
+      // console.log("Reducer: rm_signal. action=", action)
+      // console.log("         state = ", state)
+      // console.log(`         state.length = ${state.length}`)
+      // console.log(`         id = ${action.id}`)
 
       if ((action.ix <= state.length) && (action.id)){
         // Remember: don't mutate state. Build a new one and modify as appropriate
         var new_state = [] as signal_t[][]
         for(var ix = 0; ix < action.ix; ix++) {
-          console.log("        loop1: ix=", ix)
+          // console.log("        loop1: ix=", ix)
           new_state.push(JSON.parse(JSON.stringify(state[ix])))
         }
         // Make a copy of the appropriate signal and filter this copy
-        var new_signal_list = JSON.parse(JSON.stringify(state[ix]))
+        var new_signal_list = JSON.parse(JSON.stringify(state[action.ix]))
         new_signal_list = new_signal_list.filter((item: signal_t) => item.id !== action.id)
-        console.log("new_signal_list = ", new_signal_list)
+        // console.log(`      at action.ix=${action.ix}: new_signal_list = `, new_signal_list)
         new_state.push(new_signal_list)
 
-        for(var ix = action.ix; ix < state.length - 1; ix++) {
-          console.log("          loop2: ix=", ix)
+        for(var ix = action.ix + 1; ix < state.length ; ix++) {
+          // console.log("          loop2: ix=", ix)
           new_state.push(JSON.parse(JSON.stringify(state[ix])))
         }
 
-        console.log("          new_state = ", new_state)
+        // console.log("          new_state = ", new_state)
         return new_state
       } else {
         throw Error("Reducer: Trying to access signal_lists out of bounds or missing id.")
