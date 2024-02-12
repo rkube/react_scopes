@@ -51,14 +51,15 @@ function SignalSettingCard( {signal_list, signal_list_ix, signal_ix, dispatch_si
         // const new_signal = new_signal_list[ix]
         // new_signal.style = new_style
 
-        // console.log("Updating style with ", new_style)
+        console.log("Updating style with ", new_style)
         // Update style with new dispatch
-        // dispatch_signal_lists({
-        //     type: "update_style",
+        dispatch_signal_lists({
+            type: "update_style",
+            ix: signal_list_ix,
+            signal_ix: signal_ix,
+            style: new_style
 
-        // })
-
-        // setter(new_signal_list)
+        })
     }
 
     // Handles the red delete button
@@ -70,7 +71,6 @@ function SignalSettingCard( {signal_list, signal_list_ix, signal_ix, dispatch_si
             ix: signal_list_ix,
             id: signal.id
         })
-        // setter(signal_list.filter((item) => item.id !== signal_list[ix].id))
     }
 
     return(

@@ -126,9 +126,23 @@ function App() {
         throw Error("Reducer: Trying to access signal_lists out of bounds or missing id.")
       }
     } else if (action.type === "update_style") {
-      console.log(`Reducer: updating style at ix=${action.ix}`)
-      if ((action.ix < state.length) && (action.signal_ix) && (action.style)) {
-        // state[action.ix].id
+      console.log("Reducer: updating style, action=", action)
+
+      console.log("  .... action.ix < state.length: ", action.ix < state.length ? "yes" : "no")
+      console.log("  .... action.signal_ix: ", "signal_ix" in action)
+      console.log("  .... action.style : ", "style" in action)
+      // console.log(`            action.ix`)
+      if ((action.ix < state.length) && ("signal_ix" in action) && ("style" in action)) {
+        console.log(" ..... cloning state...")
+        var new_state = [] as signal_t[][]
+        for(var ix = 0; ix < state.length; ix++) {
+          new_state.push(JSON.parse(JSON.stringify(state[ix])))
+        }
+        new_state[action.ix][action.signal_ix].style = action.style
+
+        console.log("         new_state = ", new_state)
+
+        return new_state
       }
       return state
     }
