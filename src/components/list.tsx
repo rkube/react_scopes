@@ -15,7 +15,6 @@ interface signal_list_i {
 // Renders items_list
 const MyList = ({ signal_list, cb }: signal_list_i) => {   
     const parent_name = "MyList"
-    // signal_list.map((item, ix) => console.log("item = ", item, ", ix = ", ix))
     return (
         <Box>
         {signal_list.map((item, ix) => (

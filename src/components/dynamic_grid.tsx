@@ -54,7 +54,7 @@ function DynamicGrid({signal_lists, dispatch_signal_lists, ptr_mode, num_rows, r
                     <TabPanels>
                         <TabPanel>
                                 TabPanel
-                            {/* <MyPlot signals={signal_lists[ix * 2]} plugin_list={plugin_list} ptr_mode={ptr_mode}/> */}
+                            <MyPlot signals={signal_lists[ix * 2]} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
                         </TabPanel>
                         <TabPanel> Signals 
                             <DroppableArea title="area1" signal_list={signal_lists[ix * 2]} signal_ix={ix * 2} dispatch_signal_lists={dispatch_signal_lists}/>
@@ -81,7 +81,7 @@ function DynamicGrid({signal_lists, dispatch_signal_lists, ptr_mode, num_rows, r
                     <TabPanels>
                         <TabPanel>
                                 TabPanel
-                            {/* <MyPlot signals={signal_lists[ix * 2]} plugin_list={plugin_list} ptr_mode={ptr_mode}/> */}
+                            <MyPlot signals={signal_lists[ix * 2 + 1]} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
                         </TabPanel>
                         <TabPanel> Signals 
                             <DroppableArea title="area2" signal_list={signal_lists[ix * 2 + 1]} signal_ix={ix*2 + 1} dispatch_signal_lists={dispatch_signal_lists}/>

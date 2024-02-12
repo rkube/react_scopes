@@ -38,7 +38,8 @@ const MyPlot = ({signals, plugin_list, ptr_mode}: my_plot_i ) => {
     // Generate datasets from the signal list that are passed to the LinePlot
     const signal_datasets = signals.map((sig) => { return{
         label: to_str(sig), 
-        data: (sig.style) ? sig.samples.map(sig.style.scaling) : sig.samples,
+        // data: (sig.style) ? sig.samples.map(sig.style.scaling) : sig.samples,
+        data: sig.samples,
         borderColor: (sig.style) ? sig.style.color : default_colors(sig.type),
         borderWidth: (sig.style) ? sig.style.thickness : 1,
         borderDash: (sig.style) ? sig.style.borderDash : []

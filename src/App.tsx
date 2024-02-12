@@ -14,19 +14,25 @@ import { DynamicGrid } from './components/dynamic_grid'
 import { RowSelector } from './components/row_selector'
 
 import { type_t, signal_t, ptr_mode_types, ptr_mode_t, to_id, reducer_action_t } from './types/all_types'
+import { default_colors } from './lib/helpers'
 
 
 function App() {
 
   const init_state:signal_t[] = [
     {
-      index: 0,
+      // index: 0,
       shot: 100,
       type: "Type1",
       id: to_id(100, "Type_1"),
       timebase: [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0],
       samples: [0.0, 0.48, 0.84, 1.0, 0.91, 0.60, 0.14],
-      style: undefined
+      style: {
+        scaling: (val:number) => val,
+        color: default_colors('Type1'),
+        borderDash: [],
+        thickness: 3
+      }
     },
   ]
 
@@ -54,7 +60,7 @@ function App() {
       // console.log(`Reducer: adding signal at action.ix=${action.ix}`)
       // console.log(`number of signal_lists: ${state.length}`)
       if ((action.ix <= state.length) && action.signal) {
-        // console.log("------------ reducer: adding signal at ", action.ix)
+        console.log("------------ reducer: adding signal at ", action.ix)
         // console.log("             original state: ", state)
         // console.log("             old signal list = ", state[action.ix])
 
@@ -84,7 +90,7 @@ function App() {
           new_state.push(JSON.parse(JSON.stringify(state[ix])))
         }
 
-        // console.log("         new state: ", new_state)
+        console.log("         new state: ", new_state)
         // console.log("         new signal list = ", new_state[action.ix])
         return new_state
       } else {
@@ -121,7 +127,7 @@ function App() {
       }
     } else if (action.type === "update_style") {
       console.log(`Reducer: updating style at ix=${action.ix}`)
-      if ((action.ix <= state.length) && (action.style)) {
+      if ((action.ix < state.length) && (action.signal_ix) && (action.style)) {
         // state[action.ix].id
       }
       return state
@@ -148,16 +154,23 @@ function App() {
     const samples:number[] = timebase.map((i) => i + Math.random() * 0.5)
 
     // Assign an index larger than the largest index in the array
-    let new_ix = 0;
+    // let new_ix = 0;
     // if (signal_list_1.length == 0) {
     //   new_ix = 0
     // } else {
     //   new_ix = Math.max(...signal_list_1.map(item => item.index)) + 1
     // }
 
-    const new_item = {shot: new_shot, type: new_type, index: new_ix, 
+    const new_item = {shot: new_shot, type: new_type, 
       id: to_id(new_shot, new_type),
-      timebase: timebase, samples: samples, style: undefined}
+      timebase: timebase, 
+      samples: samples, 
+      style: {
+        scaling: (val: number) => val,
+        color: default_colors(new_type),
+        borderDash: [],
+        thickness: 3
+      }}
     // Update state
     set_all_signal_list([...all_signal_list, new_item])
   }
