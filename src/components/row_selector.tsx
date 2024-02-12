@@ -9,7 +9,7 @@ interface row_selector_i {
 
 function RowSelector({dispatch_signal_lists}: row_selector_i) {
 
-    function handle_change(e) {
+    function handle_change(e: any) {
         // (e) => set_num_rows(parseInt(e))
         console.log("handle_change(), num_rows=", parseInt(e))
         dispatch_signal_lists({

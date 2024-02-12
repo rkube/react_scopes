@@ -18,7 +18,7 @@ interface droppable_area_i {
  * draggable.
  */
 
-function DroppableArea({ title, signal_list, signal_ix, dispatch_signal_lists }: droppable_area_i) {
+function DroppableArea({title, signal_list, signal_ix, dispatch_signal_lists }: droppable_area_i) {
   const { setNodeRef } = useDroppable({
     id: title,
   });

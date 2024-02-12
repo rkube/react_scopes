@@ -16,6 +16,10 @@ interface dynamic_grid_i {
     row_height: number
 }
 
+
+/*
+ * Renders a grid with 2 columns and a dynamic number of rows.
+ */
 function DynamicGrid({signal_lists, dispatch_signal_lists, ptr_mode, num_rows, row_height}: dynamic_grid_i) {
 
     // Value for the crosshair plugin, which needs to by synced across the scopes
@@ -38,13 +42,22 @@ function DynamicGrid({signal_lists, dispatch_signal_lists, ptr_mode, num_rows, r
     // based on the props this component receives and pass that list to the MyPlot component
     const plugin_list = [new cross_hair_plugin(xtalk_ref, chart_cb)]
 
-
+    //
     var grid_items = []
-    for(let ix = 0; ix < num_rows; ix++) {
+    for(let ix_row = 0; ix_row < num_rows; ix_row++) {
+        // Render 2 plots per row.
+        // the id for drag-and-drop is calculated as
+        // id = ix_row * 2 + 0, ix_row * 2 + 1
+        const ix_row_1 = ix_row * 2
+        const ix_row_2 = ix_row * 2 + 1
+
+        const id_row_1 = "area_" + `${ix_row_1}`.padStart(2, "0")
+        const id_row_2 = "area_" + `${ix_row_2}`.padStart(2, "0")
+
+        console.log("id_row_1 = ", id_row_1)
         grid_items.push(
-        <GridItem key={10*ix+0}>
+        <GridItem key={10*ix_row+0}>
             <Box border="1px purple dashed" height={`${row_height}px`}>
-                {/* Row {ix} - Column {1} */}
                 <Tabs>
                     <TabList>
                         <Tab> Plot </Tab>
@@ -54,10 +67,10 @@ function DynamicGrid({signal_lists, dispatch_signal_lists, ptr_mode, num_rows, r
                     <TabPanels>
                         <TabPanel>
                                 TabPanel
-                            <MyPlot signals={signal_lists[ix * 2]} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
+                            <MyPlot signals={signal_lists[ix_row_1]} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
                         </TabPanel>
                         <TabPanel> Signals 
-                            <DroppableArea title="area1" signal_list={signal_lists[ix * 2]} signal_ix={ix * 2} dispatch_signal_lists={dispatch_signal_lists}/>
+                            <DroppableArea title={id_row_1} signal_list={signal_lists[ix_row_1]} signal_ix={ix_row_1} dispatch_signal_lists={dispatch_signal_lists}/>
                         </TabPanel>
                         <TabPanel> Settings here </TabPanel>
                     </TabPanels>
@@ -68,9 +81,8 @@ function DynamicGrid({signal_lists, dispatch_signal_lists, ptr_mode, num_rows, r
         </GridItem>
         )
         grid_items.push(
-        <GridItem key={10*ix+1}>
+        <GridItem key={10*ix_row+1}>
             <Box border="1px purple dashed" height={`${row_height}px`}>
-                {/* Row {ix} - Column {2} */}
 
                 <Tabs>
                     <TabList>
@@ -81,10 +93,10 @@ function DynamicGrid({signal_lists, dispatch_signal_lists, ptr_mode, num_rows, r
                     <TabPanels>
                         <TabPanel>
                                 TabPanel
-                            <MyPlot signals={signal_lists[ix * 2 + 1]} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
+                            <MyPlot signals={signal_lists[ix_row_2]} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
                         </TabPanel>
                         <TabPanel> Signals 
-                            <DroppableArea title="area2" signal_list={signal_lists[ix * 2 + 1]} signal_ix={ix*2 + 1} dispatch_signal_lists={dispatch_signal_lists}/>
+                            <DroppableArea title={id_row_2} signal_list={signal_lists[ix_row_2]} signal_ix={ix_row_2} dispatch_signal_lists={dispatch_signal_lists}/>
                         </TabPanel>
                         <TabPanel> Settings here </TabPanel>
                     </TabPanels>

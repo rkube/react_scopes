@@ -120,11 +120,10 @@ function App() {
         throw Error("Reducer: Trying to access signal_lists out of bounds or missing id.")
       }
     } else if (action.type === "update_style") {
-      console.log("Reducer: updating style, action=", action)
-
-      console.log("  .... action.ix < state.length: ", action.ix < state.length ? "yes" : "no")
-      console.log("  .... action.signal_ix: ", "signal_ix" in action)
-      console.log("  .... action.style : ", "style" in action)
+      // console.log("Reducer: updating style, action=", action)
+      // console.log("  .... action.ix < state.length: ", action.ix < state.length ? "yes" : "no")
+      // console.log("  .... action.signal_ix: ", "signal_ix" in action)
+      // console.log("  .... action.style : ", "style" in action)
       // console.log(`            action.ix`)
       if ((action.ix < state.length) && ("signal_ix" in action) && ("style" in action)) {
         console.log(" ..... cloning state...")
@@ -242,12 +241,15 @@ function App() {
       console.log("=====================draggable: event.over.id = ", event.over.id)
 
       setIsDropped(true);
-      var update_ix: number = 0
-      if (event.over.id === 'area1') {
-        update_ix = 0
-      } else if (event.over.id === 'area2') {
-        update_ix = 1
-      }
+      // drag-and-drop areas are labelled as area_{%02d}. 
+      const update_ix = parseInt(event.over.id.slice(-2))
+
+
+      // if (event.over.id === 'area1') {
+      //   update_ix = 0
+      // } else if (event.over.id === 'area2') {
+      //   update_ix = 1
+      // }
 
       console.log(`handleDragEnd: Updating at ix=${update_ix}`)
       dispatch_signal_lists({

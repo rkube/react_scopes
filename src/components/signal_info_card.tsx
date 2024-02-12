@@ -29,10 +29,7 @@ interface signal_info_card_i {
  * Additionally, it renders a button to remove the signal from the list for the current plot.
  */
 function SignalSettingCard( {signal_list, signal_list_ix, signal_ix, dispatch_signal_lists}: signal_info_card_i) {
-    // console.log("SignalSettingCard: signal_ix = ", signal_ix)
     const signal = signal_list[signal_ix]
-
-    // console.log("SignalSettingCard: signal = ", signal)
 
     // The form in the accordion below updates this style element.
     // Updates to the style of a signal are performed using this
@@ -47,10 +44,6 @@ function SignalSettingCard( {signal_list, signal_list_ix, signal_ix, dispatch_si
     // Updates the signal list for this plot to match the style items
     // selected in the accordion below
     const handle_submit = () => {
-        // const new_signal_list = [...signal_list]
-        // const new_signal = new_signal_list[ix]
-        // new_signal.style = new_style
-
         console.log("Updating style with ", new_style)
         // Update style with new dispatch
         dispatch_signal_lists({
