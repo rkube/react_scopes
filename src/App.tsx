@@ -9,7 +9,6 @@ import { DndContext, rectIntersection } from '@dnd-kit/core'
 
 import { MyList } from './components/list'
 import { Selector } from './components/selector'
-// import { ScopesGrid } from './components/chart_area'
 import { DynamicGrid } from './components/dynamic_grid'
 import { RowSelector } from './components/row_selector'
 
@@ -43,18 +42,13 @@ function App() {
   const [all_signal_list, set_all_signal_list] = useState<signal_t[]>(init_state)
 
   // Number of rows
-  const [num_rows, set_num_rows] = useState<number>(1)
+  // const [num_rows, set_num_rows] = useState<number>(1)
 
   // plot_signal_lists contains the list of signals to render in each plot.
   // Use a reducer consolidate updates to this list, when f.ex. adding rows
   // or adding signals to for a plot.
 
   function signal_list_reducer(state: signal_t[][], action: reducer_action_t) {
-
-    // console.log("Reducer--- action = ", action)
-    // console.log(`           id = ${action.id}`)
-
-
     if (action.type === 'add_signal') {
       // Push the signal in the action into state[action.ix]
       // console.log(`Reducer: adding signal at action.ix=${action.ix}`)
@@ -143,18 +137,46 @@ function App() {
         console.log("         new_state = ", new_state)
 
         return new_state
+      } else {
+        throw Error("Reducer: Trying to update style but either signal_list_ix, signal_ix, or style missing")
       }
-      return state
+    } else if (action.type === "set_rows") {
+      // Set number of plots to display.
+      // Use 2 plots per row. If we add plots, add two empty lists.
+      // If we reduce rows, remove the last two lists.
+
+      if (("num_rows" in action)===false) {
+        throw Error("Reducer: Field num_rows missing in set_rows action.")
+      }
+
+      if ((action.num_rows) && (2 * action.num_rows > state.length)) {
+        console.log("Reducer:  adding signals")
+        var new_state = [] as signal_t[][]
+        for(var ix = 0; ix < state.length; ix++) {
+          new_state.push(JSON.parse(JSON.stringify(state[ix])))
+        }
+        new_state.push([])
+        new_state.push([])
+        return new_state
+
+      } else if( (action.num_rows) && (2 * action.num_rows < state.length)) {
+        var new_state = [] as signal_t[][]
+        for(var ix = 0; ix < 2 * action.num_rows; ix++) {
+          new_state.push(JSON.parse(JSON.stringify(state[ix])))
+        }
+        return new_state
+      }
+
+      var new_state = [] as signal_t[][]
+      for(var ix = 0; ix < state.length; ix++) {
+        new_state.push(JSON.parse(JSON.stringify(state[ix])))
+      }
+      return new_state
     }
     throw Error("Unknown action")
   }
 
   const [plot_signal_lists, dispatch_signal_lists] = useReducer(signal_list_reducer, [[], []] as (signal_t[][]));
-
-  // These are the signals to be rendered by the plots in ScopesGrids.
-  // const [signal_list_1, set_signal_list_1] = useState<signal_t[]>([])
-  // const [signal_list_2, set_signal_list_2] = useState<signal_t[]>([])
-
 
   // Drag and Drop
   const [isDropped, setIsDropped] = useState(false);
@@ -236,6 +258,8 @@ function App() {
     }
   }
 
+  const num_rows = plot_signal_lists.length / 2
+
   return (
   <>
     <DndContext 
@@ -255,7 +279,7 @@ function App() {
         <Spacer />
         <Divider orientation='vertical' />
         <Box> 
-          <RowSelector num_rows={num_rows} set_num_rows={set_num_rows} />
+          <RowSelector dispatch_signal_lists={dispatch_signal_lists} />
         </Box>
         </Flex>
       <Divider borderColor={'blackAlpha'} size='lg' />
@@ -275,10 +299,6 @@ function App() {
       </GridItem>
 
       <GridItem>
-        {/* <ScopesGrid signal_lists={[signal_list_1, signal_list_2]} 
-                    signal_list_setters={[set_signal_list_1, set_signal_list_2]} 
-                    ptr_mode={ptr_mode} 
-                    num_rows={num_rows}/> */}
         <DynamicGrid signal_lists={plot_signal_lists} dispatch_signal_lists={dispatch_signal_lists} ptr_mode={ptr_mode} num_rows={num_rows} row_height={400}/>
       </GridItem>
     </Grid>

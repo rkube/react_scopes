@@ -54,12 +54,13 @@ export { type signal_display_t }
  ****************************************************************************/
 
 type reducer_action_t = {
-    type: 'add_signal' | 'rm_signal' | 'update_style',  // The action to take
-    ix: number,                                         // Index for the lists
-    id?: string,                                        // Identify indices within list
-    signal?: signal_t,                                  // Optional signal to add for 'add_signal'
-    signal_ix?: number                                  // Index to a signal within a signal_list.
-    style?: signal_display_t                            // Style update for 'update_style'
+    type: 'add_signal' | 'rm_signal' | 'update_style' | 'set_rows',  // The action to take
+    ix: number,                     // Index for the lists
+    id?: string,                    // Identify indices within list
+    signal?: signal_t,              // Optional signal to add for 'add_signal'
+    signal_ix?: number              // Index to a signal within a signal_list.
+    style?: signal_display_t        // Style update for 'update_style'
+    num_rows?: number               // Set number of rows
 }
 
 export {type reducer_action_t}
