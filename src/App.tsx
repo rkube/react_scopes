@@ -6,8 +6,7 @@ import './App.css'
 
 import { DndContext, rectIntersection } from '@dnd-kit/core'
 
-
-import { MyList } from './components/list'
+import { AllSignalList } from './components/list'
 import { Selector } from './components/selector'
 import { DynamicGrid } from './components/dynamic_grid'
 import { RowSelector } from './components/row_selector'
@@ -188,14 +187,6 @@ function App() {
     const timebase:number[] = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
     const samples:number[] = timebase.map((i) => i + Math.random() * 0.5)
 
-    // Assign an index larger than the largest index in the array
-    // let new_ix = 0;
-    // if (signal_list_1.length == 0) {
-    //   new_ix = 0
-    // } else {
-    //   new_ix = Math.max(...signal_list_1.map(item => item.index)) + 1
-    // }
-
     const new_item = {shot: new_shot, type: new_type, 
       id: to_id(new_shot, new_type),
       timebase: timebase, 
@@ -214,9 +205,6 @@ function App() {
   // Arguments:
   // id_delete (string) - The `id` of the item to be filtered out of the list
   const remove_signal_cb = (id_delete: string) => {
-    // set_signal_list_1(signal_list_1.filter((item) => item.id !== id_delete))
-    // set_signal_list_2(signal_list_2.filter((item) => item.id !== id_delete))
-
     console.log(`Remove signal_cb here. id_delete=${id_delete}`)
     console.log("plot_signal_lists = ", plot_signal_lists)
     console.log("plot_signal_lists.length = ", plot_signal_lists.length)
@@ -243,13 +231,6 @@ function App() {
       setIsDropped(true);
       // drag-and-drop areas are labelled as area_{%02d}. 
       const update_ix = parseInt(event.over.id.slice(-2))
-
-
-      // if (event.over.id === 'area1') {
-      //   update_ix = 0
-      // } else if (event.over.id === 'area2') {
-      //   update_ix = 1
-      // }
 
       console.log(`handleDragEnd: Updating at ix=${update_ix}`)
       dispatch_signal_lists({
@@ -296,7 +277,7 @@ function App() {
       <GridItem border='2px dashed green'>
         <Selector add_button_cb={handleNewSignal} />
         <Divider borderColor={'blackAlpha'}  size='xl'  />
-        <MyList signal_list={all_signal_list} 
+        <AllSignalList signal_list={all_signal_list} 
                 cb={remove_signal_cb} />
       </GridItem>
 

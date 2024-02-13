@@ -13,8 +13,8 @@ interface signal_list_i {
 }
 
 // Renders items_list
-const MyList = ({ signal_list, cb }: signal_list_i) => {   
-    const parent_name = "MyList"
+const AllSignalList = ({ signal_list, cb }: signal_list_i) => {   
+    const parent_name = "AllSignalList"
     return (
         <Box>
         {signal_list.map((item, ix) => (
@@ -26,4 +26,4 @@ const MyList = ({ signal_list, cb }: signal_list_i) => {
     )
 }
 
-export { MyList }
+export { AllSignalList }

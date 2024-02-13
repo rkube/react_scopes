@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react";
 import { NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper } from '@chakra-ui/react'
-import { Box, Button, Spacer } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { AccordionPanel, AccordionButton, AccordionIcon } from "@chakra-ui/react";
 
 import { DeleteIcon } from "@chakra-ui/icons";
@@ -78,10 +78,10 @@ function SignalSettingCard( {signal_list, signal_list_ix, signal_ix, dispatch_si
                 <Stack spacing={3}>
                     <form>
                         <FormControl mt={6}>
-                            <FormLabel>Color</FormLabel>
+                            <FormLabel size="s">Color</FormLabel>
                             <Input 
                                 placeholder="color" 
-                                size="sm"
+                                size="xs"
                                 type="color"
                                 onChange={(event) => {
                                     set_new_style({
@@ -96,10 +96,10 @@ function SignalSettingCard( {signal_list, signal_list_ix, signal_ix, dispatch_si
                                     
                         </FormControl>
                         <FormControl mt={6}>
-                            <FormLabel>Linestyle</FormLabel>
+                            <FormLabel size="xs">Linestyle</FormLabel>
                             <Input 
-                                placeholder="Dash lengths: [20 5]"
-                                size="sm"
+                                placeholder="Dash lengths: [20, 5]"
+                                size="xs"
                                 onChange={(event) => {
                                     set_new_style({
                                         scaling: new_style.scaling,
@@ -114,6 +114,7 @@ function SignalSettingCard( {signal_list, signal_list_ix, signal_ix, dispatch_si
                             <FormLabel>Thickness</FormLabel>
 
                             <NumberInput step={1} defaultValue={1} min={0} max={10}
+                                size="xs"
                                 onChange={(event) => {
                                     set_new_style({
                                         scaling: new_style.scaling,
@@ -133,6 +134,7 @@ function SignalSettingCard( {signal_list, signal_list_ix, signal_ix, dispatch_si
                             <FormLabel>Transform</FormLabel>
                             <Input 
                                 placeholder="(val) => (val - 1.0) / 2.0"
+                                size="xs"
                                 onChange={(event) => {
                                     set_new_style({
                                         scaling: eval(event.currentTarget.value),

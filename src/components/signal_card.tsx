@@ -29,15 +29,16 @@ const SignalCard = ({signal, ix, parent, cb}: signal_card_i) => {
           ix
         },
       });
+      
       const style = {
         transform: CSS.Translate.toString(transform),
       };
 
       return ( 
-        <Box border="dashed red 1px" width="100%" alignContent="center">
+        <Box border="dashed red 3px" width="100%" alignContent="center">
             <VStack>
 
-        <Box border="dashed blue 1px" color='black' width='100px' maxW='sm' borderWidth='1px' borderRadius='lg' as='span'
+        <Box border="dashed blue 1px" color='black' width='100%' maxW='sm' borderWidth='1px' borderRadius='lg'
             transform={style.transform}
             {...listeners}
             {...attributes}

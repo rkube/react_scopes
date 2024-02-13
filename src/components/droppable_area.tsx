@@ -23,8 +23,6 @@ function DroppableArea({title, signal_list, signal_ix, dispatch_signal_lists }: 
     id: title,
   });
 
-  // console.log("DroppableArea: signal_list = ", signal_list)
-
   return (
     <Flex flex="3" padding="5" flexDirection="column" minH="10rem">
       <Text fontWeight="bold">{title}</Text>
