@@ -8,13 +8,13 @@ import { AccordionPanel, AccordionButton, AccordionIcon } from "@chakra-ui/react
 
 import { DeleteIcon } from "@chakra-ui/icons";
 
-import { signal_display_t, signal_t, to_str, reducer_action_t } from "../types/all_types";
+import { signal_style_t, signal_display_t, to_str, reducer_action_t } from "../types/all_types";
 import { default_colors } from "../lib/helpers";
 
-interface signal_info_card_i {
-    signal_list: signal_t[];    // The signal list we are processing
-    signal_list_ix: number;     // Index of the signal list in the state object
-    signal_ix: number;          // Index of the signal in signal_list which we display
+interface signal_setting_card_i {
+    signal_display_list: signal_display_t[];   // The signal list we are processing
+    signal_list_ix: number;            // Index of the signal list in the state object
+    signal_ix: number;                 // Index of the signal in signal_list which we display
     dispatch_signal_lists: React.Dispatch<reducer_action_t>;
 }
 
@@ -28,17 +28,17 @@ interface signal_info_card_i {
  * 
  * Additionally, it renders a button to remove the signal from the list for the current plot.
  */
-function SignalSettingCard( {signal_list, signal_list_ix, signal_ix, dispatch_signal_lists}: signal_info_card_i) {
-    const signal = signal_list[signal_ix]
+function SignalSettingCard( {signal_display_list, signal_list_ix, signal_ix, dispatch_signal_lists}: signal_setting_card_i) {
+    const signal = signal_display_list[signal_ix]
 
-    // The form in the accordion below updates this style element.
+    // The accordion element shows a form to update style elements of signals.
     // Updates to the style of a signal are performed using this
     // object
-    const [new_style, set_new_style] = useState<signal_display_t> ({
-        scaling: signal.style ? signal.style.scaling : (x) => x,
-        color: signal.style ? signal.style.color : default_colors(signal.type),
-        borderDash: signal.style ? signal.style.borderDash : [],
-        thickness: signal.style ? signal.style.thickness : 3
+    const [new_style, set_new_style] = useState<signal_style_t> ({
+        scaling: (x) => x,
+        color: default_colors(signal.type),
+        borderDash: [],
+        thickness: 3
     })
 
     // Updates the signal list for this plot to match the style items
@@ -70,7 +70,7 @@ function SignalSettingCard( {signal_list, signal_list_ix, signal_ix, dispatch_si
         <Box>
             <h2>
                 <AccordionButton >
-                    <Box flex="1" textAlign="left"> ix={signal_ix} - {to_str(signal)} </Box>
+                    <Box flex="1" textAlign="left"> ix={signal_ix} - {signal.id} </Box>
                     <AccordionIcon />
                 </AccordionButton>
             </h2>

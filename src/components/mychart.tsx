@@ -1,7 +1,7 @@
 // Diong plotting stuff
 
 import { useRef } from 'react';
-import { ptr_mode_t, signal_t, to_str } from '../types/all_types'
+import { ptr_mode_t, signal_t, to_str, signal_display_t } from '../types/all_types'
 import { Chart as ChartJS, registerables, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
@@ -9,12 +9,13 @@ import { default_colors } from '../lib/helpers';
 
 
 interface my_plot_i {
-    signals: signal_t[],
+    signal_data_list: signal_t[],
+    signal_display_list: signal_display_t[],
     plugin_list: any[],
     ptr_mode: ptr_mode_t
 }
 
-const MyPlot = ({signals, plugin_list, ptr_mode}: my_plot_i ) => {
+const MyPlot = ({signal_data_list, signal_display_list, plugin_list, ptr_mode}: my_plot_i ) => {
     // Reference to the plot in this component
     const chartRef = useRef(null)
 
@@ -35,14 +36,17 @@ const MyPlot = ({signals, plugin_list, ptr_mode}: my_plot_i ) => {
         }
     }
 
-    // Generate datasets from the signal list that are passed to the LinePlot
-    const signal_datasets = signals.map((sig) => { return{
-        label: to_str(sig), 
-        // data: (sig.style) ? sig.samples.map(sig.style.scaling) : sig.samples,
-        data: sig.samples,
-        borderColor: (sig.style) ? sig.style.color : default_colors(sig.type),
-        borderWidth: (sig.style) ? sig.style.thickness : 1,
-        borderDash: (sig.style) ? sig.style.borderDash : []
+    // Generate datasets from the list of all signal data and the list of signals to display
+    // For each display to be rendered, compose data and style
+    const signal_datasets = signal_display_list.map((item) => { 
+        //
+        const signal_data = signal_data_list.filter((signal) => signal.id === item.id)[0]
+        return{
+            label: to_str(signal_data), 
+            data: signal_data.samples,
+            borderColor: item.style.color,
+            borderWidth: item.style.thickness,
+            borderDash: item.style.borderDash
     }})
 
     // We need to tell TS that we have options for a line plot

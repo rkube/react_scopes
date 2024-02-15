@@ -11,13 +11,12 @@ type type_t = typeof signal_types[number]
 
 // Defines a signal along with some metadata
 type signal_t = {
-    // index: number,  // index will be replaced by id
     id: string,     // used to uniquely identify a signal in lists etc.
     shot: number,   
     type: type_t,
     samples: number[],
     timebase: number[],
-    style: signal_display_t | undefined
+    // style: signal_style_t 
 }
 
 // Build id from a signal
@@ -38,32 +37,54 @@ export {type type_t, type signal_t, to_str, to_id}
  * 
  ****************************************************************************/
 
-type signal_display_t = {
+type signal_style_t = {
     scaling: (val: number) => number;
     color: string;
     borderDash: number[];
     thickness: number;
 }
 
-export { type signal_display_t }
+type signal_display_t = {
+    id: string,                     // Refers to a signal in signal_data_list
+    style: signal_style_t           // The style to render the signal with
+}
+
+
+export { type signal_style_t, type signal_display_t }
 
 /*************************************************************************** 
  * 
- * Actions for the signal_lists reducer
+ * Types used for global state of displayed signals and the reducer
  * 
+ * actions:
+ * add_data_signal: Adds a data source
+ * rm_data_signal: Removes a data source
+ * add_display_signal: Adds a signal to render in a given plot
+ * rm_display_signal: Removes a signal to render in a given plot
+ * update_style: Updates the style applied to render for a signal at plot level
+ * set_rows: Updates the number of plots to show
  ****************************************************************************/
 
+
 type reducer_action_t = {
-    type: 'add_signal' | 'rm_signal' | 'update_style' | 'set_rows',  // The action to take
-    ix: number,                     // Index for the lists
+    types: 'add_data_src' | 'rm_data_src' | 'add_display' | 'rm_display' | 'update_style' | 'set_rows',  // The action to take
+    ix?: number,                    // Index for the lists
     id?: string,                    // Identify indices within list
     signal?: signal_t,              // Optional signal to add for 'add_signal'
     signal_ix?: number              // Index to a signal within a signal_list.
-    style?: signal_display_t        // Style update for 'update_style'
+    style?: signal_style_t          // Style update for 'update_style'
     num_rows?: number               // Set number of rows
 }
 
-export {type reducer_action_t}
+
+type state_t = {
+    data_list: signal_t[]
+    display_lists: signal_display_t[][]
+}
+
+
+
+export { type reducer_action_t, type state_t }
 
 
 /*************************************************************************** 

@@ -35,7 +35,7 @@ const SignalCard = ({signal, ix, parent, cb}: signal_card_i) => {
       };
 
       return ( 
-        <Box border="dashed red 3px" width="100%" alignContent="center">
+        <Box key={ix} border="dashed red 3px" width="100%" alignContent="center">
             <VStack>
 
         <Box border="dashed blue 1px" color='black' width='100%' maxW='sm' borderWidth='1px' borderRadius='lg'
