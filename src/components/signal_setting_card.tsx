@@ -11,13 +11,6 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import { signal_style_t} from "../types/all_types";
 import { SignalsDispatchContext } from "../store/signals_context";
 
-// interface signal_setting_card_i {
-//     signal_display_list: signal_display_t[];   // The signal list we are processing
-//     signal_list_ix: number;            // Index of the signal list in the state object
-//     signal_ix: number;                 // Index of the signal in signal_list which we display
-//     dispatch_signal_lists: React.Dispatch<reducer_action_t>;
-// }
-
 
 interface signal_setting_card_i {
     plot_ix: number         // Index of the plot

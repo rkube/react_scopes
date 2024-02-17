@@ -10,7 +10,8 @@ import { reducer_action_t, state_t } from "../types/all_types";
 
 const signals_initial: state_t = {
     data_list: [],
-    display_list: []
+    display_list: [],
+    num_rows: 1
 }
 
 export const SignalsContext = createContext<state_t>(signals_initial)
@@ -46,6 +47,7 @@ function signals_reducer(state: state_t, action: reducer_action_t): state_t {
 
             new_state.data_list = JSON.parse(JSON.stringify(state.data_list))
             new_state.display_list = [...state.display_list]
+            new_state.num_rows = state.num_rows
 
             // Push new object to data_list if it doesn't exist
             if (new_state.data_list.filter((item) => item.id === action.signal!.id).length === 0) {
@@ -60,8 +62,8 @@ function signals_reducer(state: state_t, action: reducer_action_t): state_t {
             let new_state = {} as state_t
             
             new_state.data_list = state.data_list.filter((item) => item.id !== action.id)
-
             new_state.display_list = state.display_list.filter(item => item.id !== action.id)
+            new_state.num_rows = state.num_rows
 
             return new_state            
           }
@@ -71,15 +73,16 @@ function signals_reducer(state: state_t, action: reducer_action_t): state_t {
             if ((action.plot_ix !== undefined) && (action.id !== undefined)) {
                 // See if the requested signal is already displayed in the plot.
                 if (state.display_list.find(item => ( (item.at_plot === action.plot_ix) && (item.id === action.id)))) {
-                    console.log(`Already displaying signal ${action.id} on plot ${action.plot_ix}`)
+                    // console.log(`Already displaying signal ${action.id} on plot ${action.plot_ix}`)
                     return state
                 }
 
-                console.log(`Adding ${action.id} to plot ${action.plot_ix}`)
+                // console.log(`Adding ${action.id} to plot ${action.plot_ix}`)
                 let new_state = {} as state_t
                 // Copy over old state into new state
                 new_state.data_list = JSON.parse(JSON.stringify(state.data_list))
                 new_state.display_list = [...state.display_list]
+                new_state.num_rows = state.num_rows
 
                 new_state.display_list.push({
                     id: action.id,
@@ -87,7 +90,7 @@ function signals_reducer(state: state_t, action: reducer_action_t): state_t {
                     style: action.style!
                 })
 
-                console.log("new_state = ", new_state)
+                // console.log("new_state = ", new_state)
                 return new_state
             }
             break;
@@ -100,6 +103,7 @@ function signals_reducer(state: state_t, action: reducer_action_t): state_t {
                 new_state.data_list = JSON.parse(JSON.stringify(state.data_list))
                 // Not sure why || is needed here, but ok :)
                 new_state.display_list = state.display_list.filter(item => ((item.at_plot !== action.plot_ix) || (item.id !== action.id)))
+                new_state.num_rows = state.num_rows
 
                 console.log("rm_display: new_state = ", new_state)
                 return new_state
@@ -124,6 +128,7 @@ function signals_reducer(state: state_t, action: reducer_action_t): state_t {
                 // Copy over old state into new state
                 new_state.data_list = JSON.parse(JSON.stringify(state.data_list))
                 new_state.display_list = [...state.display_list]
+                new_state.num_rows = state.num_rows
 
                 const update_ix = state.display_list.findIndex(item => (item.at_plot === action.plot_ix) && (item.id === action.id))
                 // console.log("update_ix = ", update_ix)
@@ -134,8 +139,22 @@ function signals_reducer(state: state_t, action: reducer_action_t): state_t {
             
             break;
 
-        // case 'set_rows':
-        //   break;
+        case 'set_rows':
+            if( action.num_rows !== undefined ) {
+                console.log("Setting rows: ", state.num_rows, " -> ", action.num_rows )
+                if( (action.num_rows === state.num_rows)) {
+                    console.log(" they stay the same")
+                    return state
+                }
+                
+                let new_state = {} as state_t
+                new_state.data_list = JSON.parse(JSON.stringify(state.data_list))
+                new_state.display_list = state.display_list.filter(item => (item.at_plot < 2 * action.num_rows!))
+                new_state.num_rows = action.num_rows!
+
+                return new_state
+            }
+            break;
 
         default:
         throw Error("Unknown action")

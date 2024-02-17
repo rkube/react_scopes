@@ -1,5 +1,5 @@
 
-import { useState, useRef } from "react"
+import { useState, useRef, useContext } from "react"
 import { Box, Grid, GridItem, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { MyPlot } from "./mychart"
 
@@ -7,7 +7,8 @@ import { cross_hair_plugin } from "./cross_hair_plugin"
 import { DroppableArea } from "./droppable_area"
 import { PlotSettingsTab } from "./plot_settings_tag" 
 
-import { cross_hair_t, ptr_mode_t, signal_t, reducer_action_t, signal_display_t } from "../types/all_types"
+import { cross_hair_t, ptr_mode_t} from "../types/all_types"
+import { SignalsContext } from "../store/signals_context"
 
 interface dynamic_grid_i {
     ptr_mode: ptr_mode_t
@@ -20,6 +21,8 @@ interface dynamic_grid_i {
  * Renders a grid with 2 columns and a dynamic number of rows.
  */
 function DynamicGrid({ptr_mode, num_rows, row_height}: dynamic_grid_i) {
+
+    const state = useContext(SignalsContext)
 
     // Value for the crosshair plugin, which needs to by synced across the scopes
     const [crosshair_val, set_crosshair_val] = useState<cross_hair_t>({x: 216, y: 2})
@@ -41,9 +44,8 @@ function DynamicGrid({ptr_mode, num_rows, row_height}: dynamic_grid_i) {
     // based on the props this component receives and pass that list to the MyPlot component
     const plugin_list = [new cross_hair_plugin(xtalk_ref, chart_cb)]
 
-    //
     var grid_items = []
-    for(let ix_row = 0; ix_row < num_rows; ix_row++) {
+    for(let ix_row = 0; ix_row < state.num_rows; ix_row++) {
         // Render 2 plots per row.
         // the id for drag-and-drop is calculated as
         // id = ix_row * 2 + 0, ix_row * 2 + 1

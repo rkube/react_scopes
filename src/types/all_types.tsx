@@ -16,7 +16,6 @@ type signal_t = {
     type: type_t,
     samples: number[],
     timebase: number[],
-    // style: signal_style_t 
 }
 
 // Build id from a signal
@@ -66,7 +65,6 @@ export { type signal_style_t, type signal_display_t }
  * set_rows: Updates the number of plots to show
  ****************************************************************************/
 
-
 type reducer_action_t = {
     type: 'add_data_src' | 'rm_data_src' | 'add_display' | 'rm_display' | 'update_style' | 'set_rows',  // The action to take
     id?: string,                    // Identify indices within list
@@ -76,16 +74,14 @@ type reducer_action_t = {
     num_rows?: number               // Set number of rows
 }
 
-
 type state_t = {
     data_list: signal_t[]
     display_list: signal_display_t[]
+    num_rows: number
 }
 
 
-
 export { type reducer_action_t, type state_t }
-
 
 /*************************************************************************** 
  * 
@@ -105,7 +101,6 @@ export const ptr_mode_types = ["mode_hover", "mode_crosshair"] as const
 type ptr_mode_t = typeof ptr_mode_types[number]
 
 export { type ptr_mode_t }
-
 
 /*************************************************************************** 
  * 

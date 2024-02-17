@@ -1,7 +1,7 @@
 // Diong plotting stuff
 
 import { useRef, useContext } from 'react';
-import { ptr_mode_t, signal_t, to_str, signal_display_t } from '../types/all_types'
+import { ptr_mode_t } from '../types/all_types'
 import { Chart as ChartJS, registerables, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { SignalsContext } from '../store/signals_context';

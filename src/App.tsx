@@ -15,8 +15,8 @@ import { RowSelector } from './components/row_selector'
 
 
 
-import { ptr_mode_t } from './types/all_types'
-import { default_colors } from './lib/helpers'
+import { ptr_mode_t , ptr_mode_types} from './types/all_types'
+// import { default_colors } from './lib/helpers'
 
 import './App.css'
 
@@ -37,12 +37,27 @@ function App() {
   const [ptr_mode, set_ptr_mode] = useState<ptr_mode_t>("mode_hover")
 
 
-  const num_rows = 1 //signal_display_lists.length / 2
-
+  const num_rows = 1 
   return (
     <ChakraProvider>
       <SignalsProvider>
-        {/* <DndContext collisionDetection={rectIntersection} onDragEnd={handleDragEnd} > */}
+      <Flex >
+        <Box alignItems="center" justifyContent="center" height="50px" border="dashed red 1px">
+        <RadioGroup onChange={(e) => set_ptr_mode(e as ptr_mode_t)} value={ptr_mode}>
+          <Stack direction='row'>
+          {ptr_mode_types.map((key, ix) => ( 
+              <Radio value={key} key={ix.toString()}> {key} </Radio>
+          ))}
+          </Stack>
+        </RadioGroup>
+        </Box>
+        <Spacer />
+        <Divider orientation='vertical' />
+        <Box>
+        <RowSelector />
+        </Box>
+        </Flex>
+        
         <DnDSignalContext>
           <Grid
             templateColumns={'250px 1000px'}

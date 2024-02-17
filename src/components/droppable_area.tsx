@@ -5,14 +5,6 @@ import { Accordion, AccordionItem } from "@chakra-ui/react";
 import { useDroppable } from "@dnd-kit/core";
 import { SignalSettingCard } from "./signal_setting_card";
 import { SignalsContext } from '../store/signals_context';
-// import { reducer_action_t, signal_display_t } from "../types/all_types";
-
-// interface droppable_area_i {
-//   title: string;                                // Title of the droppable area
-//   signal_display_list: signal_display_t[];      // List of signals in this area
-//   signal_ix: number                             // Index of the signal_list 
-//   dispatch_signal_lists: React.Dispatch<reducer_action_t>;
-// }
 
 /*
  * Renders signal cards within a dropable area.
