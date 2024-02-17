@@ -64,14 +64,13 @@ function DynamicGrid({ptr_mode, num_rows, row_height}: dynamic_grid_i) {
                     </TabList>
                     <TabPanels>
                         <TabPanel>
-                            {/* <MyPlot signal_data_list={signal_data_list} signal_display_list={signal_display_lists[ix_row_1]} plugin_list={plugin_list} ptr_mode={ptr_mode}/> */}
+                            <MyPlot plot_ix={ix_row_1} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
                         </TabPanel>
                         <TabPanel>  
                             <DroppableArea plot_ix={ix_row_1} />
-                            {/* <DroppableArea title={id_row_1} signal_display_list={signal_display_lists[ix_row_1]} signal_ix={ix_row_1} dispatch_signal_lists={dispatch_signal_display_lists}/> */}
                         </TabPanel>
                         <TabPanel> 
-                            {/* <PlotSettingsTab /> */}
+                            <PlotSettingsTab />
                         </TabPanel>
                     </TabPanels>
                 </Tabs>
@@ -92,14 +91,13 @@ function DynamicGrid({ptr_mode, num_rows, row_height}: dynamic_grid_i) {
                     </TabList>
                     <TabPanels>
                         <TabPanel>
-                            {/* <MyPlot signals={signal_lists[ix_row_2]} plugin_list={plugin_list} ptr_mode={ptr_mode}/> */}
+                            <MyPlot plot_ix={ix_row_2} plugin_list={plugin_list} ptr_mode={ptr_mode}/>
                         </TabPanel>
                         <TabPanel>  
                             <DroppableArea plot_ix={ix_row_2} />
-                            {/* <DroppableArea title={id_row_2} signal_display_list={signal_display_lists[ix_row_2]} signal_ix={ix_row_2} dispatch_signal_lists={dispatch_signal_display_lists}/> */}
                         </TabPanel>
                         <TabPanel> 
-                            {/* <PlotSettingsTab /> */}
+                            <PlotSettingsTab />
                         </TabPanel>
                     </TabPanels>
                 </Tabs>

@@ -1,11 +1,10 @@
 
 
 
-
 function PlotSettingsTab() {
     return(
         <>
-        Signal Settings go here
+        Plot Settings go here
         </>
     )
 }

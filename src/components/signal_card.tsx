@@ -29,7 +29,7 @@ const SignalCard = ({ix, parent}: signal_card_i) => {
 
     // Boilerplate to get draggable working
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
-        id: to_str(signal),
+        id: to_id(signal.shot, signal.type),
         data: {
           signal,
           parent,

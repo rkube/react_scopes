@@ -58,8 +58,11 @@ function signals_reducer(state: state_t, action: reducer_action_t): state_t {
         case 'rm_data_src':
           if (action.id !== undefined) {
             let new_state = {} as state_t
-            new_state.display_list = [...state.display_list]
+            
             new_state.data_list = state.data_list.filter((item) => item.id !== action.id)
+
+            new_state.display_list = state.display_list.filter(item => item.id !== action.id)
+
             return new_state            
           }
           break;
