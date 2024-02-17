@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react";
 import { NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper } from '@chakra-ui/react'
@@ -8,16 +8,21 @@ import { AccordionPanel, AccordionButton, AccordionIcon } from "@chakra-ui/react
 
 import { DeleteIcon } from "@chakra-ui/icons";
 
-import { signal_style_t, signal_display_t, to_str, reducer_action_t } from "../types/all_types";
-import { default_colors } from "../lib/helpers";
+import { signal_style_t} from "../types/all_types";
+import { SignalsDispatchContext } from "../store/signals_context";
+
+// interface signal_setting_card_i {
+//     signal_display_list: signal_display_t[];   // The signal list we are processing
+//     signal_list_ix: number;            // Index of the signal list in the state object
+//     signal_ix: number;                 // Index of the signal in signal_list which we display
+//     dispatch_signal_lists: React.Dispatch<reducer_action_t>;
+// }
+
 
 interface signal_setting_card_i {
-    signal_display_list: signal_display_t[];   // The signal list we are processing
-    signal_list_ix: number;            // Index of the signal list in the state object
-    signal_ix: number;                 // Index of the signal in signal_list which we display
-    dispatch_signal_lists: React.Dispatch<reducer_action_t>;
+    plot_ix: number         // Index of the plot
+    signal_id: string     // Type of the signal to update style for
 }
-
 
 /*
  * This component handles updates to the style of a signal.
@@ -28,15 +33,15 @@ interface signal_setting_card_i {
  * 
  * Additionally, it renders a button to remove the signal from the list for the current plot.
  */
-function SignalSettingCard( {signal_display_list, signal_list_ix, signal_ix, dispatch_signal_lists}: signal_setting_card_i) {
-    const signal = signal_display_list[signal_ix]
+function SignalSettingCard( {plot_ix, signal_id}: signal_setting_card_i) {
+    const signals_dispatch = useContext(SignalsDispatchContext)
 
     // The accordion element shows a form to update style elements of signals.
     // Updates to the style of a signal are performed using this
     // object
     const [new_style, set_new_style] = useState<signal_style_t> ({
         scaling: (x) => x,
-        color: default_colors(signal.type),
+        color: 'green',
         borderDash: [],
         thickness: 3
     })
@@ -46,23 +51,22 @@ function SignalSettingCard( {signal_display_list, signal_list_ix, signal_ix, dis
     const handle_submit = () => {
         console.log("Updating style with ", new_style)
         // Update style with new dispatch
-        dispatch_signal_lists({
+        signals_dispatch({
             type: "update_style",
-            ix: signal_list_ix,
-            signal_ix: signal_ix,
+            plot_ix: plot_ix,
+            id: signal_id,
             style: new_style
-
         })
     }
 
     // Handles the red delete button
     // Remove the signal from this plots list.
     const handle_delete = () => {
-        console.log("handle_delete: ix=", signal_ix, ", id = ", signal.id)
-        dispatch_signal_lists({
-            type: "rm_signal",
-            ix: signal_list_ix,
-            id: signal.id
+        console.log("handle_delete ")
+        signals_dispatch({
+            type: "rm_display",
+            plot_ix: plot_ix,
+            id: signal_id
         })
     }
 
@@ -70,7 +74,7 @@ function SignalSettingCard( {signal_display_list, signal_list_ix, signal_ix, dis
         <Box>
             <h2>
                 <AccordionButton >
-                    <Box flex="1" textAlign="left"> ix={signal_ix} - {signal.id} </Box>
+                    <Box flex="1" textAlign="left"> {plot_ix} - {signal_id} </Box>
                     <AccordionIcon />
                 </AccordionButton>
             </h2>

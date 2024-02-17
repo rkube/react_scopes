@@ -6,15 +6,15 @@ import { Box } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 
 import { type_t, signal_types, to_id } from '../types/all_types'
-import { SignalsDispatchContext } from './signals_context'
+import { SignalsDispatchContext } from '../store/signals_context'
 
 
-// interface selector_i {
-//   handle_new_signal: (new_type: type_t, new_shot: number) => void
-// }
 
-//const Selector = ({handle_new_signal} : selector_i) => {
-  const Selector = () => {
+/*
+ * Component that provides a form to add new data sources
+ *
+ */
+const Selector = () => {
 
   const [shotnr, setShot] = useState<number | undefined >(undefined);
   const [selectedType, setSelectedType] = useState<type_t>("Type1")
@@ -26,7 +26,7 @@ import { SignalsDispatchContext } from './signals_context'
     setSelectedType(e.currentTarget.value as type_t)
   }
 
-  // // Callback for the add data button
+  // Callback for the add data button
   const add_signal = (e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>) => {
     // Check if shot is undefined.
     if (shotnr !== undefined) {
@@ -35,17 +35,18 @@ import { SignalsDispatchContext } from './signals_context'
       const timebase = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
       const samples = timebase.map((i) => i + Math.random() * 0.5)
 
-      signals_dispatch({types: 'add_data_src', signal: {
-        id: to_id(shotnr, selectedType),
-        shot: shotnr,
-        type: selectedType,
-        timebase: timebase,
-        samples: samples
+      signals_dispatch({
+        type: 'add_data_src', 
+        signal: {
+          id: to_id(shotnr, selectedType),
+          shot: shotnr,
+          type: selectedType,
+          timebase: timebase,
+          samples: samples
       }})
       }
     }
   
-
 
   return (
     <Box border="dashed red 1px" padding="1em">

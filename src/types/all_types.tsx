@@ -46,6 +46,7 @@ type signal_style_t = {
 
 type signal_display_t = {
     id: string,                     // Refers to a signal in signal_data_list
+    at_plot: number,                // The plot in which the signal with this style applied is rendered
     style: signal_style_t           // The style to render the signal with
 }
 
@@ -67,11 +68,10 @@ export { type signal_style_t, type signal_display_t }
 
 
 type reducer_action_t = {
-    types: 'add_data_src' | 'rm_data_src' | 'add_display' | 'rm_display' | 'update_style' | 'set_rows',  // The action to take
-    ix?: number,                    // Index for the lists
+    type: 'add_data_src' | 'rm_data_src' | 'add_display' | 'rm_display' | 'update_style' | 'set_rows',  // The action to take
     id?: string,                    // Identify indices within list
-    signal?: signal_t,              // Optional signal to add for 'add_signal'
-    signal_ix?: number              // Index to a signal within a signal_list.
+    signal?: signal_t,              // Signal to add - used by 'add_signal' - 
+    plot_ix?: number,               // Index of plot - used by 'add_display', 'rm_display', 'update_style'
     style?: signal_style_t          // Style update for 'update_style'
     num_rows?: number               // Set number of rows
 }
@@ -79,7 +79,7 @@ type reducer_action_t = {
 
 type state_t = {
     data_list: signal_t[]
-    display_lists: signal_display_t[][]
+    display_list: signal_display_t[]
 }
 
 

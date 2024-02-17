@@ -1,25 +1,32 @@
 
-import { signal_t, to_str } from "../types/all_types"
+import { useContext } from "react"
+
+import { to_id, to_str } from "../types/all_types"
 import { CSS } from "@dnd-kit/utilities"
 
 import { useDraggable } from "@dnd-kit/core"
 
 import { Box, Button, Text, VStack } from "@chakra-ui/react"
 import { DeleteIcon } from "@chakra-ui/icons"
+import { SignalsContext, SignalsDispatchContext } from "../store/signals_context"
 
 
 // Renders a dragable card for a signal.
 interface signal_card_i {
-    signal: signal_t        // The signal for which to render the card
-    ix: number              // Index in list of loaded signals
-    parent: string          // Name of the parent container
-    cb: (id: string) => void
+  ix: number      // Index in list of loaded signals
+  parent: string  // Name of the parent container
 }
+
 
 /*
  * Implements a draggable card for a signal
  */
-const SignalCard = ({signal, ix, parent, cb}: signal_card_i) => {
+const SignalCard = ({ix, parent}: signal_card_i) => {
+
+  const signals_context = useContext(SignalsContext)
+  const dispatch_signals = useContext(SignalsDispatchContext)
+  const signal = signals_context.data_list[ix]
+
     // Boilerplate to get draggable working
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: to_str(signal),
@@ -46,7 +53,12 @@ const SignalCard = ({signal, ix, parent, cb}: signal_card_i) => {
             <Text> {to_str(signal)} </Text>
 
         </Box>
-        <Button width="100%" onClick={() => cb(signal.id)} colorScheme='teal' size='sm'>  <DeleteIcon/> </Button>
+        <Button width="100%" onClick={() => {
+          dispatch_signals({
+            type: "rm_data_src",
+            id: to_id(signals_context.data_list[ix].shot, signals_context.data_list[ix].type)
+          })
+        }} colorScheme='teal' size='sm'>  <DeleteIcon/> </Button>
 
         </VStack>
 

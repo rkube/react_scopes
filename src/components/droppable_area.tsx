@@ -1,25 +1,37 @@
 // droppable_area.tsx
+import { useContext } from 'react'
 import { Flex, Text } from "@chakra-ui/react";
 import { Accordion, AccordionItem } from "@chakra-ui/react";
 import { useDroppable } from "@dnd-kit/core";
 import { SignalSettingCard } from "./signal_setting_card";
-import { signal_t, reducer_action_t, signal_display_t } from "../types/all_types";
+import { SignalsContext } from '../store/signals_context';
+// import { reducer_action_t, signal_display_t } from "../types/all_types";
 
-interface droppable_area_i {
-  title: string;                                // Title of the droppable area
-  signal_display_list: signal_display_t[];      // List of signals in this area
-  signal_ix: number                             // Index of the signal_list 
-  dispatch_signal_lists: React.Dispatch<reducer_action_t>;
-}
+// interface droppable_area_i {
+//   title: string;                                // Title of the droppable area
+//   signal_display_list: signal_display_t[];      // List of signals in this area
+//   signal_ix: number                             // Index of the signal_list 
+//   dispatch_signal_lists: React.Dispatch<reducer_action_t>;
+// }
 
 /*
  * Renders signal cards within a dropable area.
  */
 
-function DroppableArea({title, signal_display_list, signal_ix, dispatch_signal_lists }: droppable_area_i) {
+interface droppable_area_i {
+  plot_ix: number;    // Index within all plots
+}
+
+
+function DroppableArea({plot_ix}: droppable_area_i) {
+
+  const title = "area_" + `${plot_ix}`.padStart(2, "0");
   const { setNodeRef } = useDroppable({
     id: title,
   });
+
+  const signal_context = useContext(SignalsContext)
+  const signal_display_list = signal_context.display_list.filter((item) => item.at_plot === plot_ix)
 
   return (
     <Flex flex="3" padding="5" flexDirection="column" minH="10rem">
@@ -32,13 +44,14 @@ function DroppableArea({title, signal_display_list, signal_ix, dispatch_signal_l
         padding="2"
         flexDirection="column"
       >
-        <Accordion allowMultiple>
-        {signal_display_list.map((_, ix) => (
+        Test
+        <Accordion allowMultiple> 
+        {signal_display_list.map((item, ix) => (
           <AccordionItem key={ix}>
-            <SignalSettingCard signal_display_list={signal_display_list} signal_list_ix={signal_ix} signal_ix={ix} dispatch_signal_lists={dispatch_signal_lists} />
+            <SignalSettingCard plot_ix={item.at_plot} signal_id={item.id} />
             </AccordionItem>
         ))}
-        </Accordion>
+        </Accordion> 
       </Flex>
     </Flex>
   );

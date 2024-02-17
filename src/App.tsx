@@ -1,17 +1,19 @@
 //
 import { useReducer, useState } from 'react'
-import { BreadcrumbLink, ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
+import { ChakraProvider, Grid, GridItem } from '@chakra-ui/react'
 import { Box, Flex, Divider, RadioGroup, Radio, Stack, Spacer} from '@chakra-ui/react'
 
 
-import { DndContext, rectIntersection } from '@dnd-kit/core'
 
-import { SignalsProvider } from './components/signals_context'
+import { DnDSignalContext } from './store/dnd_context'
+import { SignalsProvider } from './store/signals_context'
 
 import { AllSignalList } from './components/all_signal_list'
 import { Selector } from './components/selector'
 import { DynamicGrid } from './components/dynamic_grid'
 import { RowSelector } from './components/row_selector'
+
+
 
 import { type_t, signal_t, ptr_mode_types, ptr_mode_t, to_id, reducer_action_t, signal_display_t, state_t } from './types/all_types'
 import { default_colors } from './lib/helpers'
@@ -34,143 +36,6 @@ function App() {
   // const [signalList, setSignalList] = useState<signal_t[]>(init_state)
   const [ptr_mode, set_ptr_mode] = useState<ptr_mode_t>("mode_hover")
 
-  // List of all signals that are loaded.
-  // const [signal_data_list, set_signal_data_list] = useState<signal_t[]>(init_state)
-
-
-
-
-  //   if (action.type === 'add_data_signal') {
-
-  //   } else if (action.type === 'rm_data_signal') {
-      
-  //   } else if (action.type)
-
-  //   if (action.type === 'add_signal') {
-  //     // Push the signal in the action into state[action.ix]
-  //     // console.log(`Reducer: adding signal at action.ix=${action.ix}`)
-  //     // console.log(`number of signal_lists: ${state.length}`)
-  //     if ((action.ix <= state.length) && action.signal) {
-  //       console.log("------------ reducer: adding signal at ", action.ix)
-  //       // console.log("             original state: ", state)
-  //       // console.log("             old signal list = ", state[action.ix])
-
-  //       // Remember to not mutate state!!!
-  //       var new_state = [] as signal_display_t[][]
-  //       // console.log("          new_state = ", new_state)
-        
-  //       // Push copies of all signal lists into state
-  //       for(var ix = 0; ix < action.ix; ix++) {
-  //         // console.log("  xoxoxox first loop: ix=", ix)
-  //         // console.log("      pushing: ", JSON.parse(JSON.stringify(state[ix])))
-  //         new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //       }
-  //       // console.log("        after first loop: state=", new_state)
-
-  //       // // Push a copy of state[ix], with the new signal added to it.
-  //       var new_signal_list = JSON.parse(JSON.stringify(state[action.ix]))
-  //       new_signal_list.push(action.signal)
-  //       // console.log("         new_signal_list = ", new_signal_list)
-  //       new_state.push(new_signal_list)
-
-  //       // console.log("        after middle: state=", new_state)
-
-  //       // Push copies of all remaining signal lists into new state
-  //       for(var ix = action.ix + 1; ix < state.length; ix++) {
-  //         // console.log("   xoxoxox second loop: ix=", ix)
-  //         new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //       }
-
-  //       console.log("         new state: ", new_state)
-  //       // console.log("         new signal list = ", new_state[action.ix])
-  //       return new_state
-  //     } else {
-  //       throw Error("Reducer: trying to access signal_lists out of bounds or signal undefined")
-  //     }
-  //   } else if (action.type === 'rm_signal') {
-  //     // console.log("Reducer: rm_signal. action=", action)
-  //     // console.log("         state = ", state)
-  //     // console.log(`         state.length = ${state.length}`)
-  //     // console.log(`         id = ${action.id}`)
-
-  //     if ((action.ix <= state.length) && (action.id)){
-  //       // Remember: don't mutate state. Build a new one and modify as appropriate
-  //       var new_state = [] as signal_display_t[][]
-  //       for(var ix = 0; ix < action.ix; ix++) {
-  //         // console.log("        loop1: ix=", ix)
-  //         new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //       }
-  //       // Make a copy of the appropriate signal and filter this copy
-  //       var new_signal_list = JSON.parse(JSON.stringify(state[action.ix]))
-  //       new_signal_list = new_signal_list.filter((item: signal_t) => item.id !== action.id)
-  //       // console.log(`      at action.ix=${action.ix}: new_signal_list = `, new_signal_list)
-  //       new_state.push(new_signal_list)
-
-  //       for(var ix = action.ix + 1; ix < state.length ; ix++) {
-  //         // console.log("          loop2: ix=", ix)
-  //         new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //       }
-
-  //       // console.log("          new_state = ", new_state)
-  //       return new_state
-  //     } else {
-  //       throw Error("Reducer: Trying to access signal_lists out of bounds or missing id.")
-  //     }
-  //   } else if (action.type === "update_style") {
-  //     // console.log("Reducer: updating style, action=", action)
-  //     // console.log("  .... action.ix < state.length: ", action.ix < state.length ? "yes" : "no")
-  //     // console.log("  .... action.signal_ix: ", "signal_ix" in action)
-  //     // console.log("  .... action.style : ", "style" in action)
-  //     // console.log(`            action.ix`)
-  //     if ((action.ix < state.length) && ("signal_ix" in action) && ("style" in action)) {
-  //       console.log(" ..... cloning state...")
-  //       var new_state = [] as signal_display_t[][]
-  //       for(var ix = 0; ix < state.length; ix++) {
-  //         new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //       }
-  //       new_state[action.ix][action.signal_ix].style = action.style
-
-  //       console.log("         new_state = ", new_state)
-
-  //       return new_state
-  //     } else {
-  //       throw Error("Reducer: Trying to update style but either signal_list_ix, signal_ix, or style missing")
-  //     }
-  //   } else if (action.type === "set_rows") {
-  //     // Set number of plots to display.
-  //     // Use 2 plots per row. If we add plots, add two empty lists.
-  //     // If we reduce rows, remove the last two lists.
-
-  //     if (("num_rows" in action)===false) {
-  //       throw Error("Reducer: Field num_rows missing in set_rows action.")
-  //     }
-
-  //     if ((action.num_rows) && (2 * action.num_rows > state.length)) {
-  //       console.log("Reducer:  adding signals")
-  //       var new_state = [] as signal_display_t[][]
-  //       for(var ix = 0; ix < state.length; ix++) {
-  //         new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //       }
-  //       new_state.push([])
-  //       new_state.push([])
-  //       return new_state
-
-  //     } else if( (action.num_rows) && (2 * action.num_rows < state.length)) {
-  //       var new_state = [] as signal_display_t[][]
-  //       for(var ix = 0; ix < 2 * action.num_rows; ix++) {
-  //         new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //       }
-  //       return new_state
-  //     }
-
-  //     var new_state = [] as signal_display_t[][]
-  //     for(var ix = 0; ix < state.length; ix++) {
-  //       new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //     }
-  //     return new_state
-  //   }
-  //   throw Error("Unknown action")
-  // }
 
   // display_signal_lists is a list of lists.
   // There is one list for each rendered plot.
@@ -178,69 +43,10 @@ function App() {
   // and a style that is applied to this signal in the given plot.
 
 
-  // const [signal_display_lists, dispatch_signal_lists] = useReducer(signal_list_reducer, 
-  //   {
-  //     data_list: [],
-  //     display_lists: [[], []]
-  //   } as (state_t));
-
   // Drag and Drop
   // const [isDropped, setIsDropped] = useState(false);
 
-  // This is a callback to selector. The function passes 
-  // the currently selected type and shot number up.
-  // From here, we construct a signal_t and update the list.
-  // See updating arrays in setState: https://react.dev/learn/updating-arrays-in-state
-  // const handle_new_signal = (new_type: type_t, new_shot: number) => {
-  //   const timebase:number[] = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
-  //   const samples:number[] = timebase.map((i) => i + Math.random() * 0.5)
-
-  //   const new_item = {shot: new_shot, type: new_type, 
-  //     id: to_id(new_shot, new_type),
-  //     timebase: timebase, 
-  //     samples: samples, 
-  //     style: {
-  //       scaling: (val: number) => val,
-  //       color: default_colors(new_type),
-  //       borderDash: [],
-  //       thickness: 3
-  //     }}
-
-  //   // See if an item with equal id is already loaded
-  //   if (signal_display_lists.data_list.filter((sig) => sig.id === to_id(new_shot, new_type)).length === 0) {
-  //     console.log("Adding new unique item")
-  //     dispatch_signal_lists({ types: 'add_data_src',  signal: new_item })
-  //     // set_signal_data_list([...signal_data_list, new_item])
-  //   } else {
-  //     console.log("Item already exists")
-  //   }
-
-
-  //   // Update state
-    
-  // }
-
-  // Callback to remove signals from the list
-  // Arguments:
-  // id_delete (string) - The `id` of the item to be filtered out of the list
-  // const remove_signal_cb = (id_delete: string) => {
-  //   console.log(`Remove signal_cb here. id_delete=${id_delete}`)
-  //   console.log("signal_data_list = ", signal_display_lists.data_list)
-  //   console.log("signal_data_list.length = ", signal_display_lists.data_list.length)
-  //   console.log(`id_delete = ${id_delete}`)
-
-  //   // Delete this signal from all signal_display_list
-  //   for (var ix_rm = 0; ix_rm < signal_display_lists.data_list.length; ix_rm++) {
-  //     dispatch_signal_lists({
-  //       types: 'rm_display',
-  //       ix: ix_rm,
-  //       id: id_delete
-  //     } as reducer_action_t)
-  //   }
-
-  //   // set_signal_data_list(signal_display_lists.filter((item) => item.id !== id_delete))
-  // }
-
+ 
   // function handleDragEnd(event: any) {
   //   console.log("handleDragEnd here. event = ", event)
 
@@ -260,38 +66,49 @@ function App() {
   //   }
   // }
 
-  const num_rows = 2 //signal_display_lists.length / 2
+  const num_rows = 1 //signal_display_lists.length / 2
 
   return (
     <ChakraProvider>
       <SignalsProvider>
-      <Grid
-        templateColumns={'250px 1000px'}
+        {/* <DndContext collisionDetection={rectIntersection} onDragEnd={handleDragEnd} > */}
+        <DnDSignalContext>
+          <Grid
+            templateColumns={'250px 1000px'}
 
-        alignItems='stretch'
-        fontWeight='bold'
-      >
+            alignItems='stretch'
+            fontWeight='bold'
+          >
 
-      <GridItem border='2px dashed green'>
-        grid 1
-        <Selector />
-        {/* <Divider borderColor={'blackAlpha'}  size='xl'  />
-        <AllSignalList signal_list={signal_data_list} 
-                cb={remove_signal_cb} /> */}
-      </GridItem>
+          <GridItem border='2px dashed green'>
+            grid 1
+            <Selector />
+            <Divider borderColor={'blackAlpha'}  size='xl'  />
+            <AllSignalList /> 
+          </GridItem>
 
-      <GridItem border='2px dashed green'>
-        grid 2 
-        {/* <DynamicGrid signal_data_list={signal_data_list} 
-                     signal_display_lists={signal_display_lists} 
-                     dispatch_signal_display_lists={dispatch_signal_display_lists} 
-                     ptr_mode={ptr_mode} 
-                     num_rows={num_rows} 
-                     row_height={400}/> */}
-      </GridItem>
-    </Grid>
+          <GridItem border='2px dashed green'>
+            grid 2 
+            <DynamicGrid ptr_mode={ptr_mode} num_rows={num_rows} row_height={400} />
+            {/* signal_data_list={signal_data_list} 
+                        signal_display_lists={signal_display_lists} 
+                        dispatch_signal_display_lists={dispatch_signal_display_lists} 
+                        ptr_mode={ptr_mode} 
+                        num_rows={num_rows} 
+                        row_height={400}/> */}
+          </GridItem>
+        </Grid>
+        </DnDSignalContext>
+    {/* </DndContext> */}
 
-      </SignalsProvider>
+  </SignalsProvider>
+
+  </ChakraProvider>
+  )
+}
+
+export default App
+
     {/* <DndContext 
         collisionDetection={rectIntersection}
         onDragEnd={handleDragEnd}>
@@ -340,8 +157,5 @@ function App() {
     </ChakraProvider>
 
   </DndContext> */}
-  </ChakraProvider>
-  )
-}
 
-export default App
+
