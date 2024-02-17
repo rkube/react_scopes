@@ -43,8 +43,7 @@ function signals_reducer(state: state_t, action: reducer_action_t): state_t {
         if (action.signal !== undefined) {
             // Check if the signal has already been loaded.
             let new_state = {} as state_t
-            // Copy over old signals
-
+            // Copy old signals
             new_state.data_list = JSON.parse(JSON.stringify(state.data_list))
             new_state.display_list = [...state.display_list]
             new_state.num_rows = state.num_rows
@@ -90,7 +89,6 @@ function signals_reducer(state: state_t, action: reducer_action_t): state_t {
                     style: action.style!
                 })
 
-                // console.log("new_state = ", new_state)
                 return new_state
             }
             break;
@@ -161,137 +159,4 @@ function signals_reducer(state: state_t, action: reducer_action_t): state_t {
     }
     return state
 }
-
-
-  //   if (action.type === 'add_data_signal') {
-
-  //   } else if (action.type === 'rm_data_signal') {
-      
-  //   } else if (action.type)
-
-  //   if (action.type === 'add_signal') {
-  //     // Push the signal in the action into state[action.ix]
-  //     // console.log(`Reducer: adding signal at action.ix=${action.ix}`)
-  //     // console.log(`number of signal_lists: ${state.length}`)
-  //     if ((action.ix <= state.length) && action.signal) {
-  //       console.log("------------ reducer: adding signal at ", action.ix)
-  //       // console.log("             original state: ", state)
-  //       // console.log("             old signal list = ", state[action.ix])
-
-  //       // Remember to not mutate state!!!
-  //       var new_state = [] as signal_display_t[][]
-  //       // console.log("          new_state = ", new_state)
-        
-  //       // Push copies of all signal lists into state
-  //       for(var ix = 0; ix < action.ix; ix++) {
-  //         // console.log("  xoxoxox first loop: ix=", ix)
-  //         // console.log("      pushing: ", JSON.parse(JSON.stringify(state[ix])))
-  //         new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //       }
-  //       // console.log("        after first loop: state=", new_state)
-
-  //       // // Push a copy of state[ix], with the new signal added to it.
-  //       var new_signal_list = JSON.parse(JSON.stringify(state[action.ix]))
-  //       new_signal_list.push(action.signal)
-  //       // console.log("         new_signal_list = ", new_signal_list)
-  //       new_state.push(new_signal_list)
-
-  //       // console.log("        after middle: state=", new_state)
-
-  //       // Push copies of all remaining signal lists into new state
-  //       for(var ix = action.ix + 1; ix < state.length; ix++) {
-  //         // console.log("   xoxoxox second loop: ix=", ix)
-  //         new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //       }
-
-  //       console.log("         new state: ", new_state)
-  //       // console.log("         new signal list = ", new_state[action.ix])
-  //       return new_state
-  //     } else {
-  //       throw Error("Reducer: trying to access signal_lists out of bounds or signal undefined")
-  //     }
-  //   } else if (action.type === 'rm_signal') {
-  //     // console.log("Reducer: rm_signal. action=", action)
-  //     // console.log("         state = ", state)
-  //     // console.log(`         state.length = ${state.length}`)
-  //     // console.log(`         id = ${action.id}`)
-
-  //     if ((action.ix <= state.length) && (action.id)){
-  //       // Remember: don't mutate state. Build a new one and modify as appropriate
-  //       var new_state = [] as signal_display_t[][]
-  //       for(var ix = 0; ix < action.ix; ix++) {
-  //         // console.log("        loop1: ix=", ix)
-  //         new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //       }
-  //       // Make a copy of the appropriate signal and filter this copy
-  //       var new_signal_list = JSON.parse(JSON.stringify(state[action.ix]))
-  //       new_signal_list = new_signal_list.filter((item: signal_t) => item.id !== action.id)
-  //       // console.log(`      at action.ix=${action.ix}: new_signal_list = `, new_signal_list)
-  //       new_state.push(new_signal_list)
-
-  //       for(var ix = action.ix + 1; ix < state.length ; ix++) {
-  //         // console.log("          loop2: ix=", ix)
-  //         new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //       }
-
-  //       // console.log("          new_state = ", new_state)
-  //       return new_state
-  //     } else {
-  //       throw Error("Reducer: Trying to access signal_lists out of bounds or missing id.")
-  //     }
-  //   } else if (action.type === "update_style") {
-  //     // console.log("Reducer: updating style, action=", action)
-  //     // console.log("  .... action.ix < state.length: ", action.ix < state.length ? "yes" : "no")
-  //     // console.log("  .... action.signal_ix: ", "signal_ix" in action)
-  //     // console.log("  .... action.style : ", "style" in action)
-  //     // console.log(`            action.ix`)
-  //     if ((action.ix < state.length) && ("signal_ix" in action) && ("style" in action)) {
-  //       console.log(" ..... cloning state...")
-  //       var new_state = [] as signal_display_t[][]
-  //       for(var ix = 0; ix < state.length; ix++) {
-  //         new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //       }
-  //       new_state[action.ix][action.signal_ix].style = action.style
-
-  //       console.log("         new_state = ", new_state)
-
-  //       return new_state
-  //     } else {
-  //       throw Error("Reducer: Trying to update style but either signal_list_ix, signal_ix, or style missing")
-  //     }
-  //   } else if (action.type === "set_rows") {
-  //     // Set number of plots to display.
-  //     // Use 2 plots per row. If we add plots, add two empty lists.
-  //     // If we reduce rows, remove the last two lists.
-
-  //     if (("num_rows" in action)===false) {
-  //       throw Error("Reducer: Field num_rows missing in set_rows action.")
-  //     }
-
-  //     if ((action.num_rows) && (2 * action.num_rows > state.length)) {
-  //       console.log("Reducer:  adding signals")
-  //       var new_state = [] as signal_display_t[][]
-  //       for(var ix = 0; ix < state.length; ix++) {
-  //         new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //       }
-  //       new_state.push([])
-  //       new_state.push([])
-  //       return new_state
-
-  //     } else if( (action.num_rows) && (2 * action.num_rows < state.length)) {
-  //       var new_state = [] as signal_display_t[][]
-  //       for(var ix = 0; ix < 2 * action.num_rows; ix++) {
-  //         new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //       }
-  //       return new_state
-  //     }
-
-  //     var new_state = [] as signal_display_t[][]
-  //     for(var ix = 0; ix < state.length; ix++) {
-  //       new_state.push(JSON.parse(JSON.stringify(state[ix])))
-  //     }
-  //     return new_state
-  //   }
-  //   throw Error("Unknown action")
-  // }
 

@@ -19,6 +19,7 @@ import { ptr_mode_t , ptr_mode_types} from './types/all_types'
 // import { default_colors } from './lib/helpers'
 
 import './App.css'
+import { SaveState } from './components/save_state'
 
 function App() {
 
@@ -43,19 +44,21 @@ function App() {
       <SignalsProvider>
       <Flex >
         <Box alignItems="center" justifyContent="center" height="50px" border="dashed red 1px">
-        <RadioGroup onChange={(e) => set_ptr_mode(e as ptr_mode_t)} value={ptr_mode}>
-          <Stack direction='row'>
-          {ptr_mode_types.map((key, ix) => ( 
-              <Radio value={key} key={ix.toString()}> {key} </Radio>
-          ))}
-          </Stack>
-        </RadioGroup>
+          <RadioGroup onChange={(e) => set_ptr_mode(e as ptr_mode_t)} value={ptr_mode}>
+            <Stack direction='row'>
+            {ptr_mode_types.map((key, ix) => ( 
+                <Radio value={key} key={ix.toString()}> {key} </Radio>
+            ))}
+            </Stack>
+          </RadioGroup>
         </Box>
         <Spacer />
         <Divider orientation='vertical' />
-        <Box>
-        <RowSelector />
-        </Box>
+          <Box>
+            <RowSelector />
+          </Box>
+        <Divider orientation='vertical' />
+            <SaveState />
         </Flex>
         
         <DnDSignalContext>
@@ -64,16 +67,13 @@ function App() {
             alignItems='stretch'
             fontWeight='bold'
           >
-
-            <GridItem border='2px dashed green'>
-              grid 1
+            <GridItem >
               <Selector />
               <Divider borderColor={'blackAlpha'}  size='xl'  />
               <AllSignalList /> 
             </GridItem>
 
-            <GridItem border='2px dashed green'>
-              grid 2 
+            <GridItem >
               <DynamicGrid ptr_mode={ptr_mode} num_rows={num_rows} row_height={400} />
             </GridItem>
           </Grid>

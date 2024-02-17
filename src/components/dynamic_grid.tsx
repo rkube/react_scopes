@@ -57,7 +57,7 @@ function DynamicGrid({ptr_mode, num_rows, row_height}: dynamic_grid_i) {
 
         grid_items.push(
         <GridItem key={10*ix_row+0}>
-            <Box border="1px purple dashed" height={`${row_height}px`} overflow="scroll">
+            <Box height={`${row_height}px`} overflow="scroll">
                 <Tabs>
                     <TabList>
                         <Tab> Plot </Tab>
@@ -83,7 +83,7 @@ function DynamicGrid({ptr_mode, num_rows, row_height}: dynamic_grid_i) {
         )
         grid_items.push(
         <GridItem key={10*ix_row+1}>
-            <Box border="1px purple dashed" height={`${row_height}px`} overflow="scroll">
+            <Box  height={`${row_height}px`} overflow="scroll">
 
                 <Tabs>
                     <TabList>
